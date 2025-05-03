@@ -30,12 +30,4 @@ def extract_tables(text):
     print("Calling TinyLlama...\n")
     return call_tinyllama(prompt)
 
-if __name__ == "__main__":
-    pdf_path = "test2.pdf"
-    extracted_text = extract_text_from_pdf(pdf_path)  # ✅ use correct function here
 
-    # Get the table extraction
-    table_output = extract_tables(extracted_text)
-
-    print("🔍 TinyLlama Output (Table Extraction):\n")
-    print(table_output)

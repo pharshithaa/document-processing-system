@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef  } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useDropzone } from 'react-dropzone';
@@ -116,6 +116,12 @@ const FileUpload = () => {
         updateFile(idx, { status: 'Stopped', progress: 0, isProcessing: false });
     };
 
+    const resultSectionRef = useRef(null);
+    const scrollToResult = () => {
+        if (resultSectionRef.current) {
+            resultSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
     // Cleanup all websockets on unmount
     useEffect(() => {
         return () => {
@@ -126,6 +132,11 @@ const FileUpload = () => {
 
     return (
         <div className="file-upload-container">
+            <header className="header">
+                <h1>Document Processor</h1>
+                <p>Upload, process & analyze documents effortlessly.</p>
+            </header>
+            <div className="top-row">
             <div className="upload-card main-content">
                 <h2 className="upload-heading">Upload Documents</h2>
                 <div className="upload-section">
@@ -183,7 +194,9 @@ const FileUpload = () => {
                                     </button>
                                 )}
                                 <button
-                                    onClick={() => setSelectedIdx(idx)}
+                                    onClick={() =>{ setSelectedIdx(idx)
+                                        scrollToResult();}
+                                    }
                                     disabled={!f.result}
                                     className="upload-button"
                                 >
@@ -194,23 +207,53 @@ const FileUpload = () => {
                         </li>
                     ))}
                 </ul>
-                
-                {selectedIdx !== null && files[selectedIdx] && files[selectedIdx].result && (
-                    <div className="result-section" style={{ marginTop: 32 }}>
-                        <h3>Result for: {files[selectedIdx].name}</h3>
-                        <div className="results-content">
-                            {typeof files[selectedIdx].result.results === 'string' ? (
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{files[selectedIdx].result.results}</ReactMarkdown>
-                            ) : (
-                                <pre>{JSON.stringify(files[selectedIdx].result.results, null, 2)}</pre>
-                            )}
-                        </div>
-                        <button className="upload-button" onClick={() => setSelectedIdx(null)} style={{ marginTop: 12 }}>Close</button>
-                    </div>
-                )}
             </div>
             <div className="dashboard-card">
                 <StatusDashboard files={files} />
+            </div>
+            </div>
+            <div className="result-section" ref={resultSectionRef}>
+            {selectedIdx !== null && files[selectedIdx] && files[selectedIdx].result && (
+        <div className="result-section" style={{ marginTop: 32 }}>
+            <h3>Result for: {files[selectedIdx].name}</h3>
+
+            {/* Displaying Metadata */}
+            <div className="metadata">
+    <strong>Metadata:</strong>
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {`
+Title: ${files[selectedIdx]?.result?.metadata?.title || 'N/A'}
+Author: ${files[selectedIdx]?.result?.metadata?.author || 'N/A'}
+Subject: ${files[selectedIdx]?.result?.metadata?.subject || 'N/A'}
+Pages: ${files[selectedIdx]?.result?.metadata?.pages || 'N/A'}
+        `}
+    </ReactMarkdown>
+</div>
+
+            {/* Displaying Processing Type */}
+            <div className="processing-type">
+                <strong>Processing Type:</strong> {files[selectedIdx].result.processing_type}
+            </div>
+
+            {/* Displaying Model */}
+            <div className="model">
+                <strong>Model:</strong> {files[selectedIdx].result.model}
+            </div>
+
+            {/* Displaying Results */}
+            <div className="results-content">
+                {typeof files[selectedIdx].result.results === 'string' ? (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{files[selectedIdx].result.results}</ReactMarkdown>
+                ) : (
+                    <pre>{JSON.stringify(files[selectedIdx].result.results, null, 2)}</pre>
+                )}
+            </div>
+
+            <button className="upload-button" onClick={() => setSelectedIdx(null)} style={{ marginTop: 12 }}>
+                Close
+            </button>
+                    </div>
+                )}
             </div>
         </div>
     );
