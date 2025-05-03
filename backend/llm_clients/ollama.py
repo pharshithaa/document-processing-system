@@ -14,17 +14,26 @@ print("Loading Llama 3.2 model from Ollama...")
 llm = OllamaLLM(model="llama3.2")
 
 # --------------------- PROMPTS ---------------------
-
 financial_extraction_prompt = """
 You are a financial document expert. Your task is to:
-1. Summarize the document in 2–3 lines.
-2. Identify and extract financial tables with proper formatting.
-3. For each table, briefly explain what it represents (e.g., income statement, balance sheet).
-4. Highlight key financial values like revenue, profit/loss, assets, liabilities, etc.
+
+1. Provide a brief 2–3 line summary of the financial document.
+2. Analyze the content for any financial tables:
+   - If **tables are found**:
+     - Extract them using **Markdown table format** with **clear column headers and properly aligned rows**.
+     - For each table, explain what it likely represents (e.g., income statement, balance sheet).
+     - Highlight key financial values such as revenue, profit/loss, assets, liabilities, etc.
+   - If **no tables are found**:
+     - Still summarize any important financial information or figures mentioned in the text.
+     - Clearly state: "No financial tables were found in this document."
+
+Be accurate. Do not fabricate tables. Format all output cleanly and professionally.
 
 Text:
 {text}
 """
+
+
 
 legal_extraction_prompt = """
 You are a legal document analyst. Your task is to:
@@ -41,17 +50,22 @@ Text:
 """
 
 table_extraction_prompt = """
-You are a structured data expert. Your task is to:
-1. Extract any tables from the text clearly.
-2. Format tables with proper headers and rows.
-3. Mention briefly what each table likely represents (e.g., pricing, schedule).
-4.Give the ouput in a clear Markdown template
+You are a structured data expert. Your task is to analyze the following text and:
 
+1. **Check if there are any tables** in the content.
+2. If tables are found:
+   - Extract and format them clearly using Markdown (with proper headers and rows).
+   - Mention briefly what each table likely represents (e.g., pricing, schedule).
+3. If **no tables are found**, do NOT invent any. Instead:
+   - Return a short summary of the document.
+   - Clearly state: "No tables were detected in this document."
 
+Be precise. Do not fabricate tables. Use professional and clear formatting.
 
 Text:
 {text}
 """
+
 
 # --------------------- METADATA FUNCTIONS ---------------------
 

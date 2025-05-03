@@ -194,6 +194,7 @@ const FileUpload = () => {
                         </li>
                     ))}
                 </ul>
+                
                 {selectedIdx !== null && files[selectedIdx] && files[selectedIdx].result && (
                     <div className="result-section" style={{ marginTop: 32 }}>
                         <h3>Result for: {files[selectedIdx].name}</h3>

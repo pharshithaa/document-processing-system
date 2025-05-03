@@ -17,11 +17,11 @@ default_runnable = RunnableLambda(lambda inp: (extract_tables_with_llama(inp["fi
 def is_scanned(inp):
     return inp["metadata"].get("is_scanned", False)
 
-def is_large(inp):
-    return inp["metadata"].get("pages", 0) > 10
-
 def is_financial(inp):
     return inp["helpers"]["contains_financial_tables"](inp["file_path"])
+
+def is_large(inp):
+    return inp["metadata"].get("pages", 0) > 10
 
 def is_legal(inp):
     return inp["helpers"]["is_legal_document"](inp["file_path"])

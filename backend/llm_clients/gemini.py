@@ -36,20 +36,29 @@ def extract_from_scanned_pdf(pdf_path):
                         }
                     },
                     {
-                        "text": """Extract all tables, the title, and any important information from this document.
-                        Format your response in Markdown with the following rules:
-                        1. Use # for main headings and ## for subheadings
-                        2. For tables:
-                           - Each table must start with a clear title
-                           - Use proper markdown table format with | and - characters
-                           - Ensure there's a header row and separator row
-                           - Example:
-                             | Header 1 | Header 2 |
-                             |----------|----------|
-                             | Data 1   | Data 2   |
-                        3. Use bullet points for lists
-                        4. Use bold (**) for emphasis
-                        """
+                        "text":"""Extract all possible tables, the document title, and any important information from this document.
+
+                            Format your response in **Markdown** using these rules:
+
+                            1. Use `#` for main headings and `##` for subheadings.
+                            2. For **tables**:
+                            - Extract **all tables**, even small or partial ones.
+                            - If structured data appears (e.g., schedules, prices, feature lists), treat it as a table.
+                            - Every table should begin with a clear title (e.g., **"Pricing Table"**).
+                            - Use proper markdown format with `|` and `-`:
+                                ```
+                                | Header 1 | Header 2 |
+                                |----------|----------|
+                                | Data 1   | Data 2   |
+                                ```
+                            3. Use bullet points for any key insights, lists, or highlights.
+                            4. Use `**bold**` for important values or keywords.
+                            5. If **no tables** are detected, still summarize the document and return key insights as bullet points.
+
+                            Be precise and do **not invent data**. Always reflect only what is present in the image.
+                            Text: {text}
+                            """
+
                     }
                 ]
             }]
@@ -86,19 +95,26 @@ def extract_from_large_document(pdf_path):
         
         # Define prompt for large document extraction
         large_document_prompt = """
-        Extract key insights, tables, and summaries from the following text. 
-        Format your response in Markdown with the following rules:
-        1. Use # for main headings and ## for subheadings
-        2. For tables:
-           - Each table must start with a clear title
-           - Use proper markdown table format with | and - characters
-           - Ensure there's a header row and separator row
-           - Example:
-             | Header 1 | Header 2 |
-             |----------|----------|
-             | Data 1   | Data 2   |
-        3. Use bullet points for lists
-        4. Use bold (**) for emphasis
+        Extract all possible tables, the document title, and any important information from this document.
+
+            Format your response in **Markdown** using these rules:
+
+            1. Use `#` for main headings and `##` for subheadings.
+            2. For **tables**:
+            - Extract **all tables**, even small or partial ones.
+            - If structured data appears (e.g., schedules, prices, feature lists), treat it as a table.
+            - Every table should begin with a clear title (e.g., **"Pricing Table"**).
+            - Use proper markdown format with `|` and `-`:
+                ```
+                | Header 1 | Header 2 |
+                |----------|----------|
+                | Data 1   | Data 2   |
+                ```
+            3. Use bullet points for any key insights, lists, or highlights.
+            4. Use `**bold**` for important values or keywords.
+            5. If **no tables** are detected, still summarize the document and return key insights as bullet points.
+
+            Be precise and do **not invent data**. Always reflect only what is present in the image.
 
         Text: {text}
         """
