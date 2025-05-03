@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+build/
+
+# Python
+*.pyc
+__pycache__/
+venv/
+
+# Environment Variables
+.env
+
+# IDE/Editor folders
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
