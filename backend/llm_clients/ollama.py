@@ -49,22 +49,22 @@ Text:
 {text}
 """
 
-table_extraction_prompt = """
-You are a structured data expert. Your task is to analyze the following text and:
+extraction_prompt = """
+You are an intelligent document analyst. Analyze the following text carefully and carry out these tasks:
 
-1. **Check if there are any tables** in the content.
-2. If tables are found:
-   - Extract and format them clearly using Markdown (with proper headers and rows).
-   - Mention briefly what each table likely represents (e.g., pricing, schedule).
-3. If **no tables are found**, do NOT invent any. Instead:
-   - Return a short summary of the document.
-   - Clearly state: "No tables were detected in this document."
+1. **Summarize** the overall content — explain the document's main topic and purpose in a few sentences.
+2. **Highlight key sections** such as instructions, summaries, or important details.
+3. **Detect and extract any tabular data** (e.g., rows and columns of structured information). Even if the tables are not perfectly formatted, do your best to reconstruct them.
+   - Present tables using Markdown with clear headers and rows.
+   - Add a brief note describing what each table likely represents.
+4. If you are confident that **no structured tables are present**, say: "No tables were detected in this document."
 
-Be precise. Do not fabricate tables. Use professional and clear formatting.
+Be formal, avoid assumptions, and format the response clearly.
 
-Text:
+Document Text:
 {text}
 """
+
 
 
 # --------------------- METADATA FUNCTIONS ---------------------
@@ -99,9 +99,9 @@ def extract_legal_data_with_llama(pdf_path):
         "data": str(response)
     }
 
-def extract_tables_with_llama(pdf_path):
+def extract_with_llama(pdf_path):
     text = extract_text_from_pdf(pdf_path)
-    prompt = table_extraction_prompt.format(text=text)
+    prompt = extraction_prompt.format(text=text)
     response = llm.invoke(prompt)
     return {
         "success": True,

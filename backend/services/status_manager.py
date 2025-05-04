@@ -1,17 +1,16 @@
-from typing import Dict
-from services.websocket_manager import broadcast_status
+from fastapi import FastAPI
+import asyncio
 
-# Simulating a status dictionary for demonstration
-status_db: Dict[str, str] = {}
+# Store status updates
+status_updates = {}
 
 def update_status(file_id: str, status: str):
-    """Updates the status of the file in the status_db and broadcasts it."""
-    status_db[file_id] = status
-    broadcast_status(file_id, status)
-
-# Alias for backward compatibility if needed
-set_status = update_status
+    """Update the status of a file processing task"""
+    print(f"Updating status for {file_id} to: {status}")
+    status_updates[file_id] = status
 
 def get_status(file_id: str) -> str:
-    """Gets the status of the file from the status_db."""
-    return status_db.get(file_id, "Unknown Status")
+    """Get the current status of a file processing task"""
+    status = status_updates.get(file_id, "Unknown")
+    print(f"Getting status for {file_id}: {status}")
+    return status

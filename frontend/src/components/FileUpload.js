@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { useMutation } from '@tanstack/react-query';
 import StatusDashboard from './StatusDashboard';
 import './FileUpload.css';
+import Button from '@mui/material/Button';
 
 const API_BASE_URL = 'http://localhost:8000';
 const UPLOAD_URL = `${API_BASE_URL}/api/upload/`;
@@ -75,20 +76,19 @@ const FileUpload = () => {
     };
 
     // Upload a single file
-    const uploadFile = (fileObj, idx) => {
+    const uploadFile = async (fileObj, idx) => {
         updateFile(idx, { status: 'Started', progress: 0, error: null, isProcessing: true });
-        connectWebSocket(fileObj.name, idx);
-        uploadMutation.mutate({ file: fileObj.file, idx });
-    };
-
-    // Connect to WebSocket for status updates
-    const connectWebSocket = (fileName, idx) => {
-        const wsConnection = new WebSocket(`${WS_BASE_URL}/ws/status/${fileName}`);
+        
+        // First establish WebSocket connection using filename
+        const wsConnection = new WebSocket(`${WS_BASE_URL}/ws/status/${fileObj.name}`);
         wsConnection.onopen = () => {
-            updateFile(idx, { progress: 10 });
+            console.log('WebSocket connected for file:', fileObj.name);
+            // Only start upload after WebSocket is connected
+            uploadMutation.mutate({ file: fileObj.file, idx });
         };
         wsConnection.onmessage = (event) => {
-            const status = event.data.split(':')[0].trim();
+            console.log('Received WebSocket message:', event.data);
+            const status = event.data;
             let progress = 10;
             switch(status) {
                 case 'Uploading': progress = 20; break;
@@ -101,12 +101,20 @@ const FileUpload = () => {
             }
             let isProcessing = !(status === 'Completed' || status === 'Failed' || status === 'Stopped');
             updateFile(idx, { status, progress, isProcessing });
+
+            // Close WebSocket connection if processing is complete
+            if (status === 'Completed' || status === 'Failed' || status === 'Stopped') {
+                console.log('Closing WebSocket connection for file:', fileObj.name);
+                wsConnection.close();
+            }
         };
         wsConnection.onclose = () => {
-            // Optionally handle close
+            console.log('WebSocket closed for file:', fileObj.name);
         };
-        wsConnection.onerror = () => {
+        wsConnection.onerror = (error) => {
+            console.error('WebSocket error:', error);
             updateFile(idx, { status: 'Failed', error: 'WebSocket error', isProcessing: false });
+            wsConnection.close();
         };
         updateFile(idx, { ws: wsConnection });
     };

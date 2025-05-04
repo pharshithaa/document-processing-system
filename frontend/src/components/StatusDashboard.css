@@ -1,19 +1,44 @@
-/*.status-dashboard {
-    background: #fff;
+.status-dashboard {
+    background: white;
     border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(60,60,60,0.07);
-    padding: 32px 28px;
-    width: 100%;
-    height: auto;
-    margin: 0;
-}*/
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
 .dashboard-heading {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 16px;
+}
+
+/* Table styles */
+.MuiTableContainer-root {
+    box-shadow: none !important;
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+    background-color: #f8f9fa;
     color: #34495e;
     border-bottom: 2px solid #e9ecef;
-    padding-bottom: 10px;
+}
+
+.MuiTableBody-root .MuiTableCell-root {
+    border-bottom: 1px solid #e9ecef;
+    color: #2c3e50;
+}
+
+.MuiTableRow-root:hover {
+    background-color: #f8f9fa;
+}
+
+/* Progress bar styles */
+.MuiLinearProgress-root {
+    background-color: rgba(52, 73, 94, 0.1) !important;
+}
+
+.MuiLinearProgress-bar {
+    background-color: #34495e !important;
 }
 
 .doc-list-table-wrapper {

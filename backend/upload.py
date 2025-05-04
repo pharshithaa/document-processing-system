@@ -13,6 +13,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     if not file.filename.endswith(".pdf"):
         return {"error": "Only PDF files are supported."}
 
+    # Use filename as file_id
     file_id = file.filename
     update_status(file_id, "Uploading")
     await asyncio.sleep(1)  # Give time for the status to be sent

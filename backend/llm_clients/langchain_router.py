@@ -3,15 +3,17 @@ from llm_clients.gemini import extract_from_scanned_pdf, extract_from_large_docu
 from llm_clients.ollama import (
     extract_financial_data_with_llama,
     extract_legal_data_with_llama,
-    extract_tables_with_llama
+    extract_with_llama
 )
+from llm_clients.tinyllama import process_small_document
 
 # Wrap each LLM function as a RunnableLambda
 scanned_runnable = RunnableLambda(lambda inp: (extract_from_scanned_pdf(inp["file_path"]), "Scanned PDF processing"))
 large_runnable = RunnableLambda(lambda inp: (extract_from_large_document(inp["file_path"]), "Large document processing"))
 financial_runnable = RunnableLambda(lambda inp: (extract_financial_data_with_llama(inp["file_path"]), "Financial data extraction"))
 legal_runnable = RunnableLambda(lambda inp: (extract_legal_data_with_llama(inp["file_path"]), "Legal document processing"))
-default_runnable = RunnableLambda(lambda inp: (extract_tables_with_llama(inp["file_path"]), "Standard table extraction"))
+small_runnable = RunnableLambda(lambda inp: (process_small_document(inp["file_path"]), "Small document processing"))
+default_runnable = RunnableLambda(lambda inp: (extract_with_llama(inp["file_path"]), "General analysis"))
 
 # Conditions as standalone functions
 def is_scanned(inp):
@@ -23,6 +25,9 @@ def is_financial(inp):
 def is_large(inp):
     return inp["metadata"].get("pages", 0) > 10
 
+def is_small(inp):
+    return inp["metadata"].get("pages", 0) <= 3
+
 def is_legal(inp):
     return inp["helpers"]["is_legal_document"](inp["file_path"])
 
@@ -33,6 +38,7 @@ class LangChainRouter:
             (is_large, large_runnable),
             (is_financial, financial_runnable),
             (is_legal, legal_runnable),
+            (is_small, small_runnable),
             default_runnable  # fallback
         )
 

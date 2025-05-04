@@ -15,7 +15,11 @@ llm = pipeline("text-generation", model="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
 
 def call_tinyllama(prompt):
     result = llm(prompt, max_new_tokens=300, do_sample=True)
-    return result[0]["generated_text"]
+    generated = result[0]["generated_text"]
+    
+    # Remove the prompt from the output
+    cleaned = generated.replace(prompt, "").strip()
+    return cleaned
 
 def extract_text_from_pdf(pdf_path):
     doc = fitz.open(pdf_path)
@@ -25,9 +29,35 @@ def extract_text_from_pdf(pdf_path):
         text += page.get_text()
     return text
 
-def extract_tables(text):
-    prompt = f"Extract any tables from this text and present them clearly with headers:\n\n{text}"
-    print("Calling TinyLlama...\n")
-    return call_tinyllama(prompt)
+def process_small_document(pdf_path):
+    try:
+        # Extract text from PDF
+        text = extract_text_from_pdf(pdf_path)
+        
+        # Create a prompt for small document processing
+        prompt = f"""You are a document analyst. Your task is to:
+
+1. Provide a **brief summary** of the document.
+2. Identify and extract the **sections** in the document (like "Introduction", "Text Formatting Examples", "Lists").
+3. Convert each section into **bullet points** (e.g., key items, formatting, or points mentioned).
+4.Do not diaply any page numbers.
+Document text:
+{text}
+"""
+
+        print("Processing small document with TinyLlama...")
+        result = call_tinyllama(prompt)
+        
+        return {
+            "success": True,
+            "model": "TinyLlama",
+            "data": result
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "model": "TinyLlama",
+            "error": str(e)
+        }
 
 

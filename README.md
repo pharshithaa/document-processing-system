@@ -46,7 +46,7 @@ Tools and Libraries Used
 
 - **Responsive Design**: The layout is mobile-friendly, adjusting for different screen sizes using **Material-UI’s Grid system** to ensure a consistent user experience across devices.
 
-### Backend Implementation – FastAPI & Processing Logic
+## Backend Implementation – FastAPI & Processing Logic
 
 The backend of the application uses **FastAPI** for API handling, alongside various libraries for document processing. Language models (LLMs) are used to process documents based on their type and size, with real-time updates sent to the frontend.
 
