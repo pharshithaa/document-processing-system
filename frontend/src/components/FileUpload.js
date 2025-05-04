@@ -4,10 +4,13 @@ import remarkGfm from 'remark-gfm';
 import { useDropzone } from 'react-dropzone';
 import StatusDashboard from './StatusDashboard';
 import './FileUpload.css';
+import { io } from 'socket.io-client';
+
 
 const API_BASE_URL = 'http://localhost:8000';
 const UPLOAD_URL = `${API_BASE_URL}/api/upload/`;
 const WS_BASE_URL = 'ws://localhost:8000';
+
 
 const FileUpload = () => {
     const [files, setFiles] = useState([]); // [{ file, name, size, status, progress, result, error, ws }]
@@ -97,6 +100,7 @@ const FileUpload = () => {
         };
         updateFile(idx, { ws: wsConnection });
     };
+    
 
     // Helper to update a file in the array
     const updateFile = (idx, updates) => {
