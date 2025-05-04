@@ -1,154 +1,188 @@
-A full-stack application for document uploading, real-time processing status tracking, and structured data extraction using LLMs and OCR.
+# Document Processing Platform – LLM-Driven PDF Processor
 
-## Frontend Implementation – React.js
-
-The frontend of the application is built using **React.js**, providing an intuitive and responsive interface for document uploads, real-time status tracking, and output display.
-
-Tools and Libraries Used
-**React.js**: Builds the dynamic UI using a component-based structure and reactive updates.
-
-**Material-UI (MUI)**: Provides pre-designed, customizable UI components like buttons and progress bars for a polished look.
-
-**react-dropzone**: Enables user-friendly drag-and-drop file uploads.
-
-**react-query**: Efficiently manages data fetching, caching, and reactivity.
-
-**react-markdown**: Renders markdown content (e.g., summaries, tables) into readable HTML.
-
-**Socket.IO**: Facilitates real-time status updates from the backend using WebSockets.
-
-### Rationale for Tool Selection
-
-- **React.js**: Chosen for its flexibility in managing state and efficiently updating the UI, ideal for handling dynamic content such as real-time status updates during document processing.
-
-- **Material-UI**: Provides a consistent design and pre-built components, speeding up development and ensuring a responsive, clean interface.
-
-- **react-dropzone**: Selected for seamless file uploads, enabling drag-and-drop or manual file selection, which makes the document upload process more user-friendly.
-
-- **react-query**: Chosen for efficient data fetching, reducing unnecessary re-renders, ensuring optimal performance for real-time updates.
-
-- **react-markdown**: Essential for converting markdown data into structured HTML, ensuring extracted content (e.g., tables, summaries) is cleanly rendered and readable.
-
-- **Socket.IO**: Chosen for real-time communication, allowing the frontend to receive continuous updates on document processing without requiring a page refresh.
-
-### Core Features
-
-- **File Upload**: Users can upload documents via drag-and-drop or manual selection. The upload is processed via the `/upload` API, and `react-dropzone` ensures a smooth user experience.
-
-- **Real-Time Status Dashboard**: Displays the document processing stages: **Uploading → Extracting → Processing → Completed / Failed**. WebSocket provides real-time updates, with polling as a fallback if WebSocket is unavailable.
-
-- **Status Visualization**: Displays color-coded badges for each stage (Uploading, Extracting, Processing, Completed, Failed) and a progress bar to visually track the document’s processing stage.
-
-
-- **Markdown-Based Output**: Processed results (e.g., extracted tables, summaries) are returned in Markdown format and rendered using `react-markdown` for clean, structured output.
-
-- **Error Handling**: Clear error messages are displayed for unsupported file formats or backend failures. The UI reflects errors with a **Failed** badge and detailed error information.
-
-- **Responsive Design**: The layout is mobile-friendly, adjusting for different screen sizes using **Material-UI’s Grid system** to ensure a consistent user experience across devices.
-
-## Backend Implementation – FastAPI & Processing Logic
-
-The backend of the application uses **FastAPI** for API handling, alongside various libraries for document processing. Language models (LLMs) are used to process documents based on their type and size, with real-time updates sent to the frontend.
-
-#### Tools and Libraries Used:
-
-- **FastAPI**: High-performance framework for building APIs.
-- **PyPDF2**: Extracts metadata from PDFs.
-- **pdf2image**: Converts PDFs to images for OCR processing.
-- **pytesseract**: Extracts text from images using OCR.
-- **LangChain**: Routes prompts to different LLMs based on document type/length.
-- **Socket.IO (via WebSocket)**: Real-time updates for the frontend.
-- **TinyLLaMA**: Lightweight model for small document processing.
-- **Gemini**: Large model for handling long documents with an extended context window.
-- **Ollama (Ollama 3.2)**: Specialized model for legal and financial document processing.
-
-#### Rationale for Tool Selection:
-
-- **FastAPI**: Chosen for its speed and asynchronous capabilities, making it ideal for handling document processing requests efficiently.
-- **PyPDF2** & **pdf2image**: Used to extract metadata and convert PDFs into images for OCR, enabling document processing from scanned PDFs.
-- **pytesseract**: Applied to extract text from scanned images/PDFs.
-- **LangChain**: Simplifies the integration of multiple LLMs and routes prompts effectively based on document type/size.
-- **Socket.IO**: Enables real-time communication, allowing the frontend to receive live updates on document processing status.
-
-#### Model Selection Rationale:
-
-- **TinyLLaMA**: **Cost-effective and fast**, ideal for processing small documents (less than 3 pages).
-- **Gemini**: **Best for large documents** (more than 10 pages) because of its extended context window, making it ideal for handling long-form content efficiently.
-- **Ollama**: **Specialized in legal and financial documents**, Ollama excels at extracting structured data, like tables, from such documents, while being more affordable than premium models like GPT-4.
-
-#### Cost-Effectiveness Consideration:
-
-**Ollama** and **TinyLLaMA** were selected due to their **cost-effectiveness** compared to models like GPT-4 or Gemini. While these premium models offer powerful capabilities, **Ollama** and **TinyLLaMA** are more affordable and specialized, making them ideal for applications requiring focused processing at a lower cost. This is particularly beneficial for smaller documents or specialized content like **legal** and **financial data**, where the added complexity of higher-end models (like **Gemini**) isn’t necessary.
+A full-stack application that allows users to upload PDF documents and automatically routes them through specialized LLMs based on their type and size. It supports scanned PDFs (OCR), legal and financial document parsing, and real-time status updates.
 
 ---
 
-c.Steps to Build and Test the Project
-This section outlines how to set up, run, and test the full-stack document processing application on your local machine.
+## Frontend Implementation – React.js
 
-🛠️ 1. Clone the Repository
-bash
+The frontend of the application is built using **React.js**, providing an intuitive and responsive interface for:
 
+- Uploading documents  
+- Receiving real-time status updates  
+- Viewing extracted outputs (tables, summaries)
+
+### Tools and Libraries Used
+
+| Tool/Library       | Purpose                                                         |
+| ------------------ | --------------------------------------------------------------- |
+| React.js           | Builds dynamic, responsive UI components                        |
+| Material-UI        | Provides polished, pre-designed UI components                   |
+| react-dropzone     | Enables smooth drag-and-drop or manual file uploads             |
+| react-query        | Manages API state, caching, and reactivity for smoother updates |
+| react-markdown     | Renders extracted markdown (e.g., tables/summaries) into HTML   |
+| Socket.IO          | Supports real-time communication between frontend and backend   |
+
+### Rationale for Tool Selection
+
+- **React.js**: Ideal for dynamic UI with real-time updates  
+- **Material-UI**: Speeds up styling and maintains a consistent design  
+- **react-dropzone**: Provides a user-friendly drag-and-drop interface  
+- **react-query**: Optimizes performance with smart caching and re-fetching  
+- **react-markdown**: Ensures clean rendering of LLM-generated markdown  
+- **Socket.IO**: Enables real-time progress tracking without page refreshes
+
+### Core Features
+
+- **File Upload**: Drag-and-drop or manual upload via `react-dropzone`, sent to `/upload`  
+- **Real-Time Status Dashboard**: Tracks states (Uploading → Extracting → Processing → Completed/Failed) via WebSocket (or polling fallback)  
+- **Progress Visualization**: Color-coded badges and progress bar show live processing status  
+- **Markdown Output**: Extracted summaries/tables rendered cleanly using `react-markdown`  
+- **Error Handling**: Handles backend failures or unsupported formats with visible feedback
+
+---
+
+## Backend Implementation – FastAPI & LLM Routing
+
+The backend uses **FastAPI** for asynchronous API management and document routing based on type, size, and content using LangChain and multiple LLMs.
+
+### Tools and Libraries Used
+
+| Tool/Library    | Purpose                                                          |
+| --------------- | ---------------------------------------------------------------- |
+| FastAPI         | Fast, asynchronous API development                               |
+| PyPDF2          | Extracts document metadata                                       |
+| pdf2image       | Converts PDFs into images for OCR                                |
+| pytesseract     | Performs OCR on scanned PDF images                               |
+| LangChain       | Routes inputs to appropriate LLM based on rules                  |
+| Socket.IO       | Sends real-time document status to frontend                      |
+| TinyLLaMA       | Efficient model for short documents                              |
+| Gemini          | Used for scanned and large documents (multimodal & long context) |
+| Ollama 3.2      | Specialized in parsing legal and financial documents             |
+
+### Rationale for Tool Selection
+
+- **FastAPI**: Lightweight, async-capable API ideal for concurrent processing tasks  
+- **pdf2image + pytesseract**: Extracts text from scanned images using Tesseract OCR  
+- **LangChain**: Central logic to route documents based on size/type to the right LLM  
+- **Socket.IO**: Real-time updates pushed to frontend for each processing stage  
+- **TinyLLaMA**: Low-latency and cost-efficient for simple documents  
+- **Gemini**: Handles complex scanned or large PDFs using its multimodal capability  
+- **Ollama**: Efficient at parsing structured and domain-specific data (contracts, tables)
+
+---
+
+## Model Selection Rationale
+
+| Model          | Use Case                              | Why Selected                                                   |
+| -------------- | ------------------------------------- | -------------------------------------------------------------- |
+| TinyLLaMA      | Short/general documents (≤3 pages)    | Fast, cost-effective for basic content                         |
+| Gemini         | Scanned PDFs or Long Docs (>10 pages) | Multimodal + large context window, ideal for long/complex docs |
+| Ollama 3.2     | Legal and financial documents         | Specializes in domain-specific structure and table extraction  |
+
+### Cost-Effectiveness Note
+
+While powerful models like GPT-4 or Claude offer advanced features, we prioritized TinyLLaMA and Ollama for their balance of performance and cost-efficiency. These models deliver fast, specialized outputs for smaller or niche documents — avoiding the expense of premium models where unnecessary.
+
+---
+
+## Model Routing Logic
+
+The system uses a rule-based LLM router for optimal model selection. This ensures each document is handled by the most capable and cost-efficient model.
+
+| Check Priority        | Condition                       | Model Used               |
+| --------------------- | ------------------------------- | ------------------------ |
+| 1. Scanned Document   | Detected via OCR need           | Gemini                   |
+| 2. Large Document     | More than 10 pages              | Gemini                   |
+| 3. Financial Document | Detected via metadata/text cues | Ollama 3.2               |
+| 4. Legal Document     | Detected via keywords/context   | Ollama 3.2               |
+| 5. Small Document     | 3 pages or fewer                | TinyLLaMA                |
+| 6. Fallback           | All else                        | Standard Table Extractor |
+
+This routing ensures optimal accuracy, performance, and resource usage.
+
+---
+
+## How It Works (Flow Summary)
+
+1. User uploads file (via React Dropzone)  
+2. Backend receives document and begins processing  
+3. OCR check: If scanned, convert pages to images and apply OCR using Tesseract  
+4. Metadata and content extraction using PyPDF2  
+5. LLM routing via LangChain using defined rules  
+6. Chosen model processes content, generates structured output in Markdown  
+7. Real-time updates sent to frontend via WebSocket  
+8. Frontend displays output by rendering Markdown as readable HTML
+
+---
+
+## Final Highlights
+
+- Smart model selection for cost-effective, accurate results  
+- Real-time feedback from backend to frontend  
+- Support for multiple document types (legal, financial, scanned, general)  
+- Modular backend with clean LLM abstraction and extendability  
+- Prioritized performance and cost-efficiency using open-source models
+
+
+
+---
+## Setup and Installation
+
+### 1. Clone the Repository
+```bash
 git clone https://github.com/your-username/document-processing-project.git
 cd document-processing-project
-🐍 2. Backend Setup (FastAPI)
-✅ Create and activate a virtual environment (recommended to avoid dependency conflicts):
+```
 
-bash
-
-# macOS/Linux
+### 2. Backend Setup (FastAPI)
+```bash
+# Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate
 
 # Windows
-python -m venv venv
 venv\Scripts\activate
-✅ Install backend dependencies:
 
-bash
+# macOS/Linux
+source venv/bin/activate
 
+# Install dependencies
 pip install -r requirements.txt
-✅ Create a .env file in the backend root with the following contents:
+```
 
-env
+Create `.env` file in backend root:
+```env
+GEMINI_API_KEY="GEMINI KEY"
+HF_TOKEN="HUGGING FACE TOKEN"
+```
 
-UPLOAD_DIR=./uploads
-LLM_API_KEY=your-llm-api-key
-✅ Run the FastAPI server:
-
-bash
-
+Run the FastAPI server:
+```bash
 uvicorn main:app --reload
+```
 Backend will be available at: http://localhost:8000
 
-⚛️ 3. Frontend Setup (React.js)
-✅ Navigate to the frontend directory:
-
-bash
-
+### 3. Frontend Setup (React.js)
+```bash
 cd frontend
-✅ Install frontend dependencies:
-
-bash
-
 npm install
-✅ Create a .env file in the frontend root with the following contents:
+```
 
-env
-
+Create `.env` file in frontend root:
+```env
 REACT_APP_API_URL=http://localhost:8000
-✅ Run the React development server:
+```
 
-bash
+Run the React development server:
+```bash
 npm start
+```
 Frontend will be available at: http://localhost:3000
 
-🧪 4. Testing the Application
-Open your browser and go to: http://localhost:3000
+## Testing the Application
 
-Upload different types of PDF documents
-
-Monitor real-time status updates:
-
-Uploading → Extracting → Processing → Completed
-
-Processed results (summaries, tables, text) will appear in the UI with Markdown formatting.
+1. Open your browser and go to: http://localhost:3000
+2. Upload different types of PDF documents
+3. Monitor real-time status updates:
+   - Uploading → Extracting → Processing → Completed
+4. Processed results (summaries, tables, text) will appear in the UI with Markdown formatting

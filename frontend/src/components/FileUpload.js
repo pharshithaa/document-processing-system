@@ -5,7 +5,6 @@ import { useDropzone } from 'react-dropzone';
 import { useMutation } from '@tanstack/react-query';
 import StatusDashboard from './StatusDashboard';
 import './FileUpload.css';
-import Button from '@mui/material/Button';
 
 const API_BASE_URL = 'http://localhost:8000';
 const UPLOAD_URL = `${API_BASE_URL}/api/upload/`;
@@ -138,11 +137,6 @@ const FileUpload = () => {
     };
 
     const resultSectionRef = useRef(null);
-    const scrollToResult = () => {
-        if (resultSectionRef.current) {
-            resultSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
 
     // Cleanup all websockets on unmount
     useEffect(() => {
@@ -152,12 +146,24 @@ const FileUpload = () => {
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() => {
+        if (
+            selectedIdx !== null &&
+            files[selectedIdx] &&
+            files[selectedIdx].result &&
+            resultSectionRef.current
+        ) {
+            resultSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        // eslint-disable-next-line
+    }, [selectedIdx, files]);
+
     return (
         <div className="file-upload-container">
-            <header className="header">
+            <div className="header">
                 <h1>Document Processor</h1>
                 <p>Upload, process & analyze documents effortlessly.</p>
-            </header>
+            </div>
             <div className="top-row">
                 <div className="upload-card main-content">
                     <h2 className="upload-heading">Upload Documents</h2>
@@ -227,10 +233,7 @@ const FileUpload = () => {
                                     )}
                                     <button
                                         className="upload-button"
-                                        onClick={() => {
-                                            setSelectedIdx(idx);
-                                            scrollToResult();
-                                        }}
+                                        onClick={() => setSelectedIdx(idx)}
                                         disabled={!f.result}
                                     >
                                         View
