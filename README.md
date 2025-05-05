@@ -9,35 +9,31 @@ A full-stack application that allows users to upload PDF documents and automatic
 ```mermaid
 graph TD
     %% Frontend Flow
-    A[Upload Document] --> B[Initiate WebSocket Connection]
-    B --> C[Store File & Initialize Processing]
+    A[Upload Document] --> B[Initiate WebSocket Connection & Trigger Processing]
+    B --> C[Content & Metadata Extraction]
     
     %% Backend Processing
-    C --> D[Metadata and content are extracted]
-    D --> E[Classify Document Type]
-    
-    %% Document Analysis
-    E --> F[OCR for Scanned Documents]
-    F --> G{Route to Appropriate Model}
-    
+    C --> D[Document Classification & OCR Handling]
+    D --> E[Route to Appropriate Model]
+
     %% Processing Paths
-    G -->|Scanned| H[Tesseract OCR]
-    G -->|Large >10 pages| I[Gemini Model]
-    G -->|Financial/Legal| J[Ollama 3.2]
-    G -->|Small ≤3 pages| K[TinyLLaMA]
-    G -->|Default| L[Table Extractor]
+    E -->|Scanned| F[Tesseract OCR]
+    E -->|Large >10 pages| G[Gemini Model]
+    E -->|Financial/Legal| H[Ollama 3.2]
+    E -->|Small ≤3 pages| I[TinyLLaMA]
+    E -->|Default| J[Table Extractor]
     
     %% Content Processing
-    H --> M[Process Document & Generate Output]
-    I --> M
-    J --> M
-    K --> M
-    L --> M
+    F --> K[Process Document & Generate Output]
+    G --> K
+    H --> K
+    I --> K
+    J --> K
 
     
     %% Results & Status
-    M --> N[Render Results on Frontend]
-    N --> O[Close WebSocket Connection]
+    K --> L[Render Results on Frontend]
+    L --> M[WebSocket Termination]
     
 
     %% Styling - Professional Blue Theme
