@@ -2,11 +2,6 @@
 
 A full-stack application that allows users to upload PDF documents and automatically routes them through specialized LLMs based on their type and size. It supports scanned PDFs (OCR), legal and financial document parsing, and real-time status updates.
 
-# Document Processing Pipeline
-
-## Complete System Flow
-
-```mermaid
 graph TD
     %% Frontend Flow
     subgraph Frontend
@@ -74,78 +69,29 @@ graph TD
     E1 --> I1
 
     %% Styling
-    style A1 fill:#f9f,stroke:#333,stroke-width:2px
-    style B1 fill:#bbf,stroke:#333,stroke-width:2px
-    style C1 fill:#bfb,stroke:#333,stroke-width:2px
-    style F1 fill:#fbb,stroke:#333,stroke-width:2px
-    style G1 fill:#f9f,stroke:#333,stroke-width:2px
-    style H1 fill:#bbf,stroke:#333,stroke-width:2px
-    style I1 fill:#fbf,stroke:#333,stroke-width:2px
-```
+    style A1 fill:#ffffff,stroke:#333,stroke-width:2px
+    style B1 fill:#ffffff,stroke:#333,stroke-width:2px
+    style C1 fill:#ffffff,stroke:#333,stroke-width:2px
+    style F1 fill:#90ee90,stroke:#333,stroke-width:2px
+    style G1 fill:#ffcccc,stroke:#333,stroke-width:2px
+    style H1 fill:#ffffff,stroke:#333,stroke-width:2px
+    style I1 fill:#ffffff,stroke:#333,stroke-width:2px
+    style D1 fill:#90ee90,stroke:#333,stroke-width:2px
+    style D2 fill:#90ee90,stroke:#333,stroke-width:2px
+    style D3 fill:#90ee90,stroke:#333,stroke-width:2px
+    style D4 fill:#90ee90,stroke:#333,stroke-width:2px
+    style E1 fill:#90ee90,stroke:#333,stroke-width:2px
+    style F2 fill:#ffffff,stroke:#333,stroke-width:2px
+    style F3 fill:#ffffff,stroke:#333,stroke-width:2px
+    style G2 fill:#ffcccc,stroke:#333,stroke-width:2px
+    style G3 fill:#ffcccc,stroke:#333,stroke-width:2px
+    style G4 fill:#ffcccc,stroke:#333,stroke-width:2px
+    style H2 fill:#ffffff,stroke:#333,stroke-width:2px
+    style H3 fill:#ffffff,stroke:#333,stroke-width:2px
+    style H4 fill:#ffffff,stroke:#333,stroke-width:2px
+    style I2 fill:#ffffff,stroke:#333,stroke-width:2px
+    style I3 fill:#ffffff,stroke:#333,stroke-width:2px
 
-## Detailed Process Steps
-
-1. **Frontend Initialization**
-   - User uploads PDF
-   - File object created with properties:
-     ```javascript
-     {
-         file: file,
-         name: file.name,
-         size: (file.size / 1024).toFixed(2) + ' KB',
-         status: '',
-         progress: 0,
-         result: null,
-         error: null,
-         ws: null,
-         isProcessing: false
-     }
-     ```
-   - WebSocket connection established: `ws://localhost:8000/ws/status/{filename}`
-
-2. **Backend Processing**
-   - File received at `/api/upload/`
-   - Added to `processing_files` set
-   - Status updates:
-     - "Uploading" (20%)
-     - "Extracting" (40%)
-     - "Processing" (60%)
-     - "Extracted" (80%)
-     - "Completed" (100%)
-     - "Failed" (0%)
-
-3. **Document Processing**
-   - Metadata extraction
-   - Document type detection
-   - Model selection:
-     - Gemini: Scanned/Large documents
-     - Ollama 3.2: Financial/Legal documents
-     - TinyLLaMA: Small documents
-     - Standard Table Extractor: Default
-
-4. **Error Handling**
-   - Status updates to "Failed"
-   - Error message display
-   - Resource cleanup
-   - WebSocket closure
-
-5. **Cancellation**
-   - WebSocket connection closure
-   - Cancel API call
-   - Processing removal
-   - Status update to "Stopped"
-
-6. **Result Display**
-   - Results formatting
-   - UI update with metadata
-   - Model information display
-   - React-markdown rendering
-
-7. **Cleanup**
-   - WebSocket connections closed
-   - Files removed from processing
-   - UI status updates
-   - Resource cleanup
 ```
 
 ## Process Steps
