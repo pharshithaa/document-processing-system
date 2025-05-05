@@ -6,42 +6,59 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 ## System Flow
 
-``mermaid
+```mermaid
 graph TD
     %% Main Flow
-    A[Upload PDF] --> B[WebSocket Setup]
-    B --> C[Process Document]
+    A[Document Upload] --> B[Document Analysis]
+    B --> C{Document Type}
     
-    %% Processing
-    C --> D{Document Type}
-    D -->|Scanned/Large| E[Gemini]
-    D -->|Financial/Legal| F[Ollama]
-    D -->|Small| G[TinyLLaMA]
-    D -->|Default| H[Table Extractor]
+    %% Processing Paths
+    C -->|Scanned/Large| D[Gemini Model]
+    C -->|Financial/Legal| E[Ollama 3.2]
+    C -->|Small| F[TinyLLaMA]
+    C -->|Default| G[Table Extractor]
     
     %% Results
-    E --> I[Results]
-    F --> I
-    G --> I
-    H --> I
+    D --> H[Process Results]
+    E --> H
+    F --> H
+    G --> H
     
-    %% Error & Status
-    I --> J[Display]
-    B -.->|Status Updates| J
-    C -.->|If Error| K[Error Handling]
+    %% Status & Display
+    H --> I[Display Results]
+    J[Status Updates] -.->|Real-time| I
     
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style B fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style C fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style D fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style E fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
-    style F fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
-    style G fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style E fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style F fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style G fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style H fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style I fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style J fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
-    style K fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+```
+
+## Key Features
+
+1. **Document Processing**
+   - Automatic document type detection
+   - Intelligent model selection
+   - Real-time status updates
+
+2. **Model Selection**
+   - Gemini: Scanned/Large documents
+   - Ollama 3.2: Financial/Legal documents
+   - TinyLLaMA: Small documents
+   - Table Extractor: Standard documents
+
+3. **System Features**
+   - Real-time progress tracking
+   - Error handling
+   - Processing cancellation
+   - Clean result display
 ## Frontend Implementation – React.js
 
 The frontend of the application is built using **React.js**, providing an intuitive and responsive interface for:
