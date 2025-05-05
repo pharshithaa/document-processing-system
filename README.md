@@ -18,7 +18,7 @@ graph TD
     E -->|Large >10 pages| F[Gemini Model]
     E -->|Financial/Legal| G[Ollama 3.2]
     E -->|Small ≤3 pages| H[TinyLLaMA]
-    E -->|Default| I[Table Extractor]
+    E -->|Default| I[General Analysis]
     
     %% Content Processing
     F --> J[Process Document & Generate Output]
