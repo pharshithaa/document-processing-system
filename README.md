@@ -9,39 +9,26 @@ A full-stack application that allows users to upload PDF documents and automatic
 ```mermaid
 graph TD
     %% Main Flow
-    A[Document Upload] --> B[WebSocket Connection]
-    B --> C[Metadata Extraction]
-    C --> D{Document Type}
+    A[Upload PDF] --> B[WebSocket Setup]
+    B --> C[Process Document]
     
-    %% Processing Paths
-    D -->|Scanned/Large| E[Gemini Model]
-    D -->|Financial/Legal| F[Ollama 3.2]
+    %% Processing
+    C --> D{Document Type}
+    D -->|Scanned/Large| E[Gemini]
+    D -->|Financial/Legal| F[Ollama]
     D -->|Small| G[TinyLLaMA]
     D -->|Default| H[Table Extractor]
     
-    %% Results & Error Handling
-    E --> I[Process Results]
+    %% Results
+    E --> I[Results]
     F --> I
     G --> I
     H --> I
     
-    I --> J[Display Results]
-    
-    %% Error & Status Flow
-    C -.->|If Error| K[Error Detection]
-    E -.->|If Error| K
-    F -.->|If Error| K
-    G -.->|If Error| K
-    H -.->|If Error| K
-    I -.->|If Error| K
-    
-    K --> L[Error Handling]
-    L --> M[Close WebSocket]
-    M --> N[Cleanup Resources]
-    
-    %% Status Updates
-    B --> O[Status Updates]
-    O -.->|Real-time| J
+    %% Error & Status
+    I --> J[Display]
+    B -.->|Status Updates| J
+    C -.->|If Error| K[Error Handling]
     
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
@@ -55,37 +42,25 @@ graph TD
     style I fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style J fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style K fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style L fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style M fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style N fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style O fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
 ```
 
 ## Key Features
 
 1. **Document Processing**
-   - WebSocket connection for real-time updates
-   - Metadata extraction and analysis
+   - Real-time status updates via WebSocket
+   - Automatic document type detection
    - Intelligent model selection
-   - Real-time status tracking
 
 2. **Model Selection**
    - Gemini: Scanned/Large documents
-   - Ollama 3.2: Financial/Legal documents
+   - Ollama: Financial/Legal documents
    - TinyLLaMA: Small documents
    - Table Extractor: Standard documents
 
 3. **System Features**
-   - Real-time progress tracking via WebSocket
-   - Comprehensive error handling
-   - Automatic cleanup procedures
+   - Real-time progress tracking
+   - Error handling
    - Clean result display
-
-4. **Error Handling**
-   - Automatic error detection at each stage
-   - Graceful failure handling
-   - Resource cleanup
-   - WebSocket connection management
 
 ## Frontend Implementation – React.js
 
