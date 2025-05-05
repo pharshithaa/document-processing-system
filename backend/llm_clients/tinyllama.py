@@ -38,9 +38,10 @@ def process_small_document(pdf_path):
         prompt = f"""You are a document analyst. Your task is to:
 
 1. Provide a **brief summary** of the document.
-2. Identify and extract the **sections** in the document (like "Introduction", "Text Formatting Examples", "Lists").
+2. Identify and extract the **sections** in the document (e.g., "Introduction", "Text Formatting Examples", "Lists").
 3. Convert each section into **bullet points** (e.g., key items, formatting, or points mentioned).
-4.Do not diaply any page numbers.
+4. Do not display any page numbers.
+
 Document text:
 {text}
 """
