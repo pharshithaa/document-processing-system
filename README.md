@@ -4,40 +4,32 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 # Document Processing Pipeline
 
-## System Flow
-
 ```mermaid
 graph TD
     %% Frontend Flow
-    A[Upload Document] --> B[Initiate WebSocket Connection]
-    B --> C[Store File & Initialize Processing]
+    A[Upload Document] --> B[Initiate WebSocket Connection & Trigger Processing]
+    B --> C[Content & Metadata Extraction]
     
     %% Backend Processing
-    C --> D[Metadata and content are extracted]
-    D --> E[Classify Document Type]
-    
-    %% Document Analysis
-    E --> F[OCR for Scanned Documents]
-    F --> G{Route to Appropriate Model}
-    
+    C --> D[Document Classification & OCR Handling]
+    D --> E[Route to Appropriate Model]
+
     %% Processing Paths
-    G -->|Scanned| H[Tesseract OCR]
-    G -->|Large >10 pages| I[Gemini Model]
-    G -->|Financial/Legal| J[Ollama 3.2]
-    G -->|Small ≤3 pages| K[TinyLLaMA]
-    G -->|Default| L[Table Extractor]
+    E -->|Large >10 pages| F[Gemini Model]
+    E -->|Financial/Legal| G[Ollama 3.2]
+    E -->|Small ≤3 pages| H[TinyLLaMA]
+    E -->|Default| I[Table Extractor]
     
     %% Content Processing
-    H --> M[Process Document & Generate Output]
-    I --> M
-    J --> M
-    K --> M
-    L --> M
+    F --> J[Process Document & Generate Output]
+    G --> J
+    H --> J
+    I --> J
 
     
     %% Results & Status
-    M --> N[Render Results on Frontend]
-    N --> O[Close WebSocket Connection]
+    J --> K[Render Results on Frontend]
+    K --> L[WebSocket Termination]
     
 
     %% Styling - Professional Blue Theme
@@ -53,37 +45,7 @@ graph TD
     style J fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style K fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style L fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style M fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
-    style N fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style O fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
 ```
-
-## Key Features
-
-1. **Frontend Processing**
-   - React Dropzone for file upload
-   - File object initialization
-   - Real-time status tracking
-
-2. **Backend Processing**
-   - File saving and processing initiation
-   - WebSocket connection management
-   - Document type detection
-
-3. **Document Analysis**
-   - Tesseract OCR for scanned documents
-   - PyPDF2 for metadata and content extraction
-   - Intelligent model selection:
-     - Gemini: Large documents
-     - Ollama 3.2: Financial/Legal documents
-     - TinyLLaMA: Small documents
-     - Table Extractor: Default
-
-4. **Result Handling**
-   - Markdown processing
-   - HTML rendering
-   - Metadata display
-   - Error handling and cleanup
      
 ## Frontend Implementation – React.js
 
@@ -195,20 +157,12 @@ This routing ensures optimal accuracy, performance, and resource usage.
 7. **Selected model processes the content** and returns structured Markdown.
 8. **WebSocket pushes live status updates** to the frontend.
 9. **Frontend renders Markdown output** as readable HTML along with metadata.
+10. Terminate WebSocket Connection
 
 ---
+##  UI Preview
+![Web Preview](./assets/preview.png)
 
-## Final Highlights
-
-- Smart model selection for cost-effective, accurate results  
-- Real-time feedback from backend to frontend  
-- Support for multiple document types (legal, financial, scanned, general)  
-- Modular backend with clean LLM abstraction and extendability  
-- Prioritized performance and cost-efficiency using open-source models
-
-
-
----
 ## Setup and Installation
 
 ### 1. Clone the Repository
