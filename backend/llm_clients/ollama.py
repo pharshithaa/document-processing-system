@@ -15,19 +15,17 @@ llm = OllamaLLM(model="llama3.2")
 
 # --------------------- PROMPTS ---------------------
 financial_extraction_prompt = """
-You are a financial document expert. Your task is to:
-
-1. Provide a brief 2–3 line summary of the financial document.
-2. Analyze the content for any financial tables:
-   - If **tables are found**:
-     - Extract them using **Markdown table format** with **clear column headers and properly aligned rows**.
+- If **tables are found**:
+     - Extract full tables using **Markdown table format** with **clear column headers and properly aligned rows**.
      - For each table, explain what it likely represents (e.g., income statement, balance sheet).
      - Highlight key financial values such as revenue, profit/loss, assets, liabilities, etc.
-   - If **no tables are found**:
+     - Ensure the table is **complete**. If there is incomplete data, clearly mention which parts are missing.
+   
+- If **no tables are found**:
      - Still summarize any important financial information or figures mentioned in the text.
      - Clearly state: "No financial tables were found in this document."
 
-Be accurate. Do not fabricate tables. Format all output cleanly and professionally.
+Be accurate. Do not fabricate tables. Format all output cleanly and professionally, ensuring the data is as complete as possible and clearly explained.
 
 Text:
 {text}
@@ -50,20 +48,27 @@ Text:
 """
 
 extraction_prompt = """
-You are an intelligent document analyst. Analyze the following text carefully and carry out these tasks:
+You are an intelligent and precise document analyst. Read the following document text carefully and perform the following tasks in order:
 
-1. **Summarize** the overall content — explain the document's main topic and purpose in a few sentences.
-2. **Highlight key sections** such as instructions, summaries, or important details.
-3. **Detect and extract any tabular data** (e.g., rows and columns of structured information). Even if the tables are not perfectly formatted, do your best to reconstruct them.
-   - Present tables using Markdown with clear headers and rows.
-   - Add a brief note describing what each table likely represents.
-4. If you are confident that **no structured tables are present**, say: "No tables were detected in this document."
+1. **Summary**: Provide a concise summary of the document. Focus on the main topic and overall purpose.
 
-Be formal, avoid assumptions, and format the response clearly.
+2. **Key Highlights**: Identify and clearly list the most important sections, such as instructions, summaries, warnings, or critical points. Use bullet points if necessary.
+
+3. **Table Extraction**: Check if the text contains any tabular data (e.g., lists with rows and columns). If found:
+   - Reconstruct the tables using **Markdown format** with proper headers and rows.
+   - Provide a **brief description** of what each table represents.
+
+4. **Table Absence**: If no tables are detected, write clearly:  
+   `"No tables were detected in this document."`
+
+Be objective, avoid assumptions, and format the response clearly with proper headings.
+
+---
 
 Document Text:
 {text}
 """
+
 
 
 
