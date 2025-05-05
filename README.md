@@ -62,14 +62,6 @@ graph TD
    - Error handling
    - Clean result display
 
-## Frontend Implementation – React.js
-
-The frontend of the application is built using **React.js**, providing an intuitive and responsive interface for:
-
-- Uploading documents  
-- Receiving real-time status updates  
-- Viewing extracted outputs (tables, summaries)
-
 ### Tools and Libraries Used
 
 | Tool/Library       | Purpose                                                         |
