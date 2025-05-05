@@ -15,23 +15,21 @@ graph TD
     D --> E[Route to Appropriate Model]
 
     %% Processing Paths
-    E -->|Scanned| F[Tesseract OCR]
-    E -->|Large >10 pages| G[Gemini Model]
-    E -->|Financial/Legal| H[Ollama 3.2]
-    E -->|Small ≤3 pages| I[TinyLLaMA]
-    E -->|Default| J[Table Extractor]
+    E -->|Large >10 pages| F[Gemini Model]
+    E -->|Financial/Legal| G[Ollama 3.2]
+    E -->|Small ≤3 pages| H[TinyLLaMA]
+    E -->|Default| I[Table Extractor]
     
     %% Content Processing
-    F --> K[Process Document & Generate Output]
-    G --> K
-    H --> K
-    I --> K
-    J --> K
+    F --> J[Process Document & Generate Output]
+    G --> J
+    H --> J
+    I --> J
 
     
     %% Results & Status
-    K --> L[Render Results on Frontend]
-    L --> M[WebSocket Termination]
+    J --> K[Render Results on Frontend]
+    K --> L[WebSocket Termination]
     
 
     %% Styling - Professional Blue Theme
@@ -47,7 +45,6 @@ graph TD
     style J fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style K fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style L fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style M fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
 ```
      
 ## Frontend Implementation – React.js
@@ -163,6 +160,8 @@ This routing ensures optimal accuracy, performance, and resource usage.
 10. Terminate WebSocket Connection
 
 ---
+##  UI Preview
+![Web Preview](./assets/preview.png)
 
 ## Setup and Installation
 
