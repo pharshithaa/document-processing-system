@@ -21,7 +21,7 @@ const FileUpload = () => {
                 file,
                 name: file.name,
                 size: (file.size / 1024).toFixed(2) + ' KB',
-                status: '',
+                status: 'Started',
                 progress: 0,
                 result: null,
                 error: null,
