@@ -2,6 +2,30 @@
 
 A full-stack application that allows users to upload PDF documents and automatically routes them through specialized LLMs based on their type and size. It supports scanned PDFs (OCR), legal and financial document parsing, and real-time status updates.
 
+<details> <summary>📌 Click to expand Mermaid code</summary>
+
+```mermaid
+graph TD
+    A[1. Document Upload (Frontend)] --> B[2. WebSocket + API Trigger]
+    B --> C[3. Backend Receives File]
+    C --> D[4. Metadata Extraction & OCR Check]
+    D --> E{5. Routing Logic}
+    E --> F1[Scanned → Gemini]
+    E --> F2[Large Doc → Gemini]
+    E --> F3[Legal/Financial → Ollama 3.2]
+    E --> F4[Small → TinyLLaMA]
+    E --> F5[Default → Standard Extractor]
+    F1 --> G[6. LLM-based Extraction]
+    F2 --> G
+    F3 --> G
+    F4 --> G
+    F5 --> G
+    G --> H[7. WebSocket Status Update]
+    H --> I[8. Frontend Progress Update]
+    I --> J[9. Result Display (Markdown Tables, Metadata)]
+    J --> K[10. Cleanup & Close]
+
+
 ---
 
 ## Frontend Implementation – React.js
