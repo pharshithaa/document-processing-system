@@ -4,135 +4,51 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 # Document Processing Pipeline
 
-## High-Level Pipeline Flow
+## Document Processing Flow
 
 ```mermaid
 graph TD
-    A[Document Upload] --> B[Document Ingestion]
-    B --> C[Document Processing]
-    C --> D[Result Generation]
-    D --> E[Output Display]
-
+    %% Main Flow
+    A[User Uploads PDF] --> B[Document Analysis]
+    B --> C{Document Type?}
+    
+    %% Processing Paths
+    C -->|Scanned/Large| D[Gemini Model]
+    C -->|Financial/Legal| E[Ollama 3.2 Model]
+    C -->|Small Document| F[TinyLLaMA Model]
+    C -->|Default| G[Standard Table Extractor]
+    
+    %% Results
+    D --> H[Generate Results]
+    E --> H
+    F --> H
+    G --> H
+    
+    %% Final Output
+    H --> I[Display Results to User]
+    
+    %% Status Updates
+    J[Progress Updates] -.->|Real-time| I
+    
+    %% Styling
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
     style C fill:#bfb,stroke:#333,stroke-width:2px
-    style D fill:#fbb,stroke:#333,stroke-width:2px
-    style E fill:#fbf,stroke:#333,stroke-width:2px
+    style H fill:#fbb,stroke:#333,stroke-width:2px
+    style I fill:#fbf,stroke:#333,stroke-width:2px
 ```
 
-## Detailed Processing Flow
+## Process Steps
 
-```mermaid
-graph TD
-    subgraph "Frontend"
-        A1[User Uploads PDF] --> A2[WebSocket Connection]
-        A2 --> A3[Progress Tracking]
-    end
-
-    subgraph "Backend Processing"
-        B1[File Reception] --> B2[Metadata Extraction]
-        B2 --> B3[Document Analysis]
-        
-        B3 --> C1{Document Type?}
-        
-        C1 -->|Scanned| D1[Gemini Processing]
-        C1 -->|Large >10 pages| D1
-        C1 -->|Financial| D2[Ollama 3.2 Processing]
-        C1 -->|Legal| D2
-        C1 -->|Small ≤3 pages| D3[TinyLLaMA Processing]
-        C1 -->|Default| D4[Standard Table Extractor]
-        
-        D1 --> E1[Result Generation]
-        D2 --> E1
-        D3 --> E1
-        D4 --> E1
-    end
-
-    subgraph "Status Management"
-        F1[Status Updates] --> F2[Progress Tracking]
-        F2 --> F3[Error Handling]
-    end
-
-    subgraph "Output"
-        E1 --> G1[Result Processing]
-        G1 --> G2[UI Display]
-        G2 --> G3[User Interaction]
-    end
-
-    style A1 fill:#f9f,stroke:#333,stroke-width:2px
-    style B1 fill:#bbf,stroke:#333,stroke-width:2px
-    style C1 fill:#bfb,stroke:#333,stroke-width:2px
-    style D1 fill:#fbb,stroke:#333,stroke-width:2px
-    style E1 fill:#fbf,stroke:#333,stroke-width:2px
-    style F1 fill:#f9f,stroke:#333,stroke-width:2px
-    style G1 fill:#bbf,stroke:#333,stroke-width:2px
-```
-
-## Status Flow
-
-```mermaid
-stateDiagram-v2
-    [*] --> Uploading
-    Uploading --> Extracting
-    Extracting --> Processing
-    Processing --> Extracted
-    Extracted --> Completed
-    Processing --> Failed
-    Extracting --> Failed
-    Uploading --> Failed
-    Failed --> [*]
-    Completed --> [*]
-```
-
-## Component Interaction
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant WebSocket
-    participant Backend
-    participant LLM
-
-    User->>Frontend: Upload PDF
-    Frontend->>WebSocket: Establish Connection
-    Frontend->>Backend: Send File
-    Backend->>Backend: Extract Metadata
-    Backend->>Backend: Analyze Document
-    Backend->>LLM: Process Document
-    LLM->>Backend: Return Results
-    Backend->>WebSocket: Send Status Updates
-    WebSocket->>Frontend: Update Progress
-    Backend->>Frontend: Send Final Results
-    Frontend->>User: Display Results
-```
-
-## Notes
-
-1. **Document Ingestion**
-   - PDF file upload
-   - WebSocket connection establishment
-   - Initial metadata extraction
-
-2. **Document Processing**
-   - Document type detection
-   - Model selection based on document characteristics
-   - Parallel processing capabilities
-
-3. **Result Generation**
-   - LLM processing
-   - Result formatting
-   - Error handling
-
-4. **Output Display**
-   - Real-time progress updates
-   - Result rendering
-   - User interaction handling
-
-5. **Error Handling**
-   - Graceful failure handling
-   - User notification
-   - Cleanup procedures 
+1. **Upload**: User uploads a PDF document
+2. **Analysis**: System analyzes document type and characteristics
+3. **Processing**: Document is processed by the most suitable model:
+   - Gemini: For scanned documents or large files (>10 pages)
+   - Ollama 3.2: For financial or legal documents
+   - TinyLLaMA: For small documents (≤3 pages)
+   - Standard Table Extractor: For all other documents
+4. **Results**: System generates and displays results to user
+5. **Progress**: Real-time updates show processing status
 
 ---
 
