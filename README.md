@@ -25,10 +25,15 @@ graph TD
     G --> I
     H --> I
     
-    %% Error & Status
-    I --> J[Display]
+    %% Success & Failure Paths
+    I -->|Success| J[Display Results]
+    I -->|Failure| K[Error Handling]
+    K --> L[Cleanup Resources]
+    L --> M[Close WebSocket]
+    
+    %% Status Updates
     B -.->|Status Updates| J
-    C -.->|If Error| K[Error Handling]
+    B -.->|Status Updates| K
     
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
@@ -42,6 +47,8 @@ graph TD
     style I fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style J fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style K fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    style L fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    style M fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
 ```
 
 ## Key Features
@@ -59,8 +66,22 @@ graph TD
 
 3. **System Features**
    - Real-time progress tracking
-   - Error handling
+   - Error handling and cleanup
+   - Resource management
    - Clean result display
+
+4. **Error Handling**
+   - Automatic failure detection
+   - Resource cleanup
+   - WebSocket closure
+   - User notification
+## Frontend Implementation – React.js
+
+The frontend of the application is built using **React.js**, providing an intuitive and responsive interface for:
+
+- Uploading documents  
+- Receiving real-time status updates  
+- Viewing extracted outputs (tables, summaries)
 
 ### Tools and Libraries Used
 
