@@ -29,10 +29,10 @@ graph TD
     
     %% Content Processing
     H --> M[Process Document & Generate Output]
-    G --> H
-    G --> H
-    G --> H
-    G --> H
+    I --> M
+    J --> M
+    K --> M
+    L --> M
 
     
     %% Results & Status
