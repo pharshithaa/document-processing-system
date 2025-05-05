@@ -28,11 +28,20 @@ graph TD
     I --> J[Display Results]
     
     %% Error & Status Flow
-    K[Error Detection] -.->|If Error| L[Error Handling]
-    L -.->|Cleanup| M[Close WebSocket]
+    C -.->|If Error| K[Error Detection]
+    E -.->|If Error| K
+    F -.->|If Error| K
+    G -.->|If Error| K
+    H -.->|If Error| K
+    I -.->|If Error| K
+    
+    K --> L[Error Handling]
+    L --> M[Close WebSocket]
+    M --> N[Cleanup Resources]
     
     %% Status Updates
-    N[Status Updates] -.->|Real-time| J
+    B --> O[Status Updates]
+    O -.->|Real-time| J
     
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
@@ -48,7 +57,8 @@ graph TD
     style K fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
     style L fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
     style M fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style N fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style N fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    style O fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
 ```
 
 ## Key Features
@@ -72,44 +82,10 @@ graph TD
    - Clean result display
 
 4. **Error Handling**
-   - Automatic error detection
+   - Automatic error detection at each stage
    - Graceful failure handling
    - Resource cleanup
    - WebSocket connection management
-```
-
-## Key Features
-
-1. **Document Processing**
-   - Automatic document type detection
-   - Intelligent model selection
-   - Real-time status updates
-
-2. **Model Selection**
-   - Gemini: Scanned/Large documents
-   - Ollama 3.2: Financial/Legal documents
-   - TinyLLaMA: Small documents
-   - Table Extractor: Standard documents
-
-3. **System Features**
-   - Real-time progress tracking
-   - Error handling
-   - Processing cancellation
-   - Clean result display
-
-## Process Steps
-
-1. **Upload**: User uploads a PDF document
-2. **Analysis**: System analyzes document type and characteristics
-3. **Processing**: Document is processed by the most suitable model:
-   - Gemini: For scanned documents or large files (>10 pages)
-   - Ollama 3.2: For financial or legal documents
-   - TinyLLaMA: For small documents (≤3 pages)
-   - Standard Table Extractor: For all other documents
-4. **Results**: System generates and displays results to user
-5. **Progress**: Real-time updates show processing status
-
----
 
 ## Frontend Implementation – React.js
 
