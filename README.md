@@ -8,57 +8,93 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 ```mermaid
 graph TD
-    %% Main Flow
-    A[Document Upload] --> B[Document Analysis]
-    B --> C{Document Type}
+    %% Frontend Flow
+    A[User Uploads PDF] --> B[React Dropzone]
+    B --> C[Initialize File Object]
+    
+    %% Backend Processing
+    C --> D[Save File & Start Processing]
+    D --> E[WebSocket Connection]
+    
+    %% Document Analysis
+    E --> F[Document Analysis]
+    F --> G{Document Type}
     
     %% Processing Paths
-    C -->|Scanned/Large| D[Gemini Model]
-    C -->|Financial/Legal| E[Ollama 3.2]
-    C -->|Small| F[TinyLLaMA]
-    C -->|Default| G[Table Extractor]
+    G -->|Scanned| H[Tesseract OCR]
+    G -->|Large >10 pages| I[Gemini Model]
+    G -->|Financial/Legal| J[Ollama 3.2]
+    G -->|Small ≤3 pages| K[TinyLLaMA]
+    G -->|Default| L[Table Extractor]
     
-    %% Results
-    D --> H[Process Results]
-    E --> H
-    F --> H
-    G --> H
+    %% Content Processing
+    H --> M[PyPDF2 Extraction]
+    I --> M
+    J --> M
+    K --> M
+    L --> M
     
-    %% Status & Display
-    H --> I[Display Results]
-    J[Status Updates] -.->|Real-time| I
+    %% Results & Status
+    M --> N[Process Results]
+    N -->|Success| O[Display Results]
+    N -->|Failure| P[Error Handling]
+    
+    %% Status Updates
+    E -.->|Live Updates| O
+    E -.->|Live Updates| P
+    
+    %% Cleanup
+    P --> Q[Cleanup Resources]
+    Q --> R[Close WebSocket]
     
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style B fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style C fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style D fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style E fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style E fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style F fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style G fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style H fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style G fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style H fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style I fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style J fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style J fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style K fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style L fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style M fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style N fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style O fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style P fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    style Q fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    style R fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
 ```
 
 ## Key Features
 
-1. **Document Processing**
-   - Automatic document type detection
-   - Intelligent model selection
-   - Real-time status updates
+1. **Frontend Processing**
+   - React Dropzone for file upload
+   - File object initialization
+   - Real-time status tracking
 
-2. **Model Selection**
-   - Gemini: Scanned/Large documents
-   - Ollama 3.2: Financial/Legal documents
-   - TinyLLaMA: Small documents
-   - Table Extractor: Standard documents
+2. **Backend Processing**
+   - File saving and processing initiation
+   - WebSocket connection management
+   - Document type detection
 
-3. **System Features**
-   - Real-time progress tracking
-   - Error handling
-   - Processing cancellation
-   - Clean result display
+3. **Document Analysis**
+   - Tesseract OCR for scanned documents
+   - PyPDF2 for metadata and content extraction
+   - Intelligent model selection:
+     - Gemini: Large documents
+     - Ollama 3.2: Financial/Legal documents
+     - TinyLLaMA: Small documents
+     - Table Extractor: Default
+
+4. **Result Handling**
+   - Markdown processing
+   - HTML rendering
+   - Metadata display
+   - Error handling and cleanup
+     
 ## Frontend Implementation – React.js
 
 The frontend of the application is built using **React.js**, providing an intuitive and responsive interface for:
