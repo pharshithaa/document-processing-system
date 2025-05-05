@@ -4,38 +4,148 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 # Document Processing Pipeline
 
-## Document Processing Flow
+## Complete System Flow
 
 ```mermaid
 graph TD
-    %% Main Flow
-    A[User Uploads PDF] --> B[Document Analysis]
-    B --> C{Document Type?}
-    
-    %% Processing Paths
-    C -->|Scanned/Large| D[Gemini Model]
-    C -->|Financial/Legal| E[Ollama 3.2 Model]
-    C -->|Small Document| F[TinyLLaMA Model]
-    C -->|Default| G[Standard Table Extractor]
-    
-    %% Results
-    D --> H[Generate Results]
-    E --> H
-    F --> H
-    G --> H
-    
-    %% Final Output
-    H --> I[Display Results to User]
-    
-    %% Status Updates
-    J[Progress Updates] -.->|Real-time| I
-    
+    %% Frontend Flow
+    subgraph Frontend
+        A1[User Uploads PDF] --> A2[Initialize File Object]
+        A2 --> A3[Setup WebSocket]
+        A3 --> A4[Upload Button Click]
+    end
+
+    %% Backend Processing
+    subgraph Backend
+        B1[Receive File] --> B2[Add to processing_files]
+        B2 --> B3[Update Status: Uploading]
+        B3 --> B4[Save to uploads/]
+        B4 --> B5[Extract Metadata]
+        B5 --> B6[Check Document Type]
+        
+        B6 --> C1{Document Type?}
+        C1 -->|Scanned| D1[Gemini Model]
+        C1 -->|Large >10 pages| D1
+        C1 -->|Financial| D2[Ollama 3.2]
+        C1 -->|Legal| D2
+        C1 -->|Small ≤3 pages| D3[TinyLLaMA]
+        C1 -->|Default| D4[Table Extractor]
+        
+        D1 --> E1[Process Results]
+        D2 --> E1
+        D3 --> E1
+        D4 --> E1
+    end
+
+    %% Status Management
+    subgraph Status
+        F1[Status Updates] --> F2[Progress Tracking]
+        F2 --> F3[WebSocket Broadcast]
+    end
+
+    %% Error Handling
+    subgraph ErrorHandling
+        G1[Error Detection] --> G2[Status: Failed]
+        G2 --> G3[Cleanup Resources]
+        G3 --> G4[Close WebSocket]
+    end
+
+    %% Cancellation Flow
+    subgraph Cancellation
+        H1[Cancel Button] --> H2[Close WebSocket]
+        H2 --> H3[Call Cancel API]
+        H3 --> H4[Remove from processing]
+    end
+
+    %% Result Display
+    subgraph Results
+        I1[Process Complete] --> I2[Format Results]
+        I2 --> I3[Display in UI]
+    end
+
+    %% Connections
+    A4 --> B1
+    B3 -.-> F1
+    B5 -.-> F1
+    E1 -.-> F1
+    G1 -.-> F1
+    H1 -.-> F1
+    F3 -.-> A3
+    E1 --> I1
+
     %% Styling
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style C fill:#bfb,stroke:#333,stroke-width:2px
-    style H fill:#fbb,stroke:#333,stroke-width:2px
-    style I fill:#fbf,stroke:#333,stroke-width:2px
+    style A1 fill:#f9f,stroke:#333,stroke-width:2px
+    style B1 fill:#bbf,stroke:#333,stroke-width:2px
+    style C1 fill:#bfb,stroke:#333,stroke-width:2px
+    style F1 fill:#fbb,stroke:#333,stroke-width:2px
+    style G1 fill:#f9f,stroke:#333,stroke-width:2px
+    style H1 fill:#bbf,stroke:#333,stroke-width:2px
+    style I1 fill:#fbf,stroke:#333,stroke-width:2px
+```
+
+## Detailed Process Steps
+
+1. **Frontend Initialization**
+   - User uploads PDF
+   - File object created with properties:
+     ```javascript
+     {
+         file: file,
+         name: file.name,
+         size: (file.size / 1024).toFixed(2) + ' KB',
+         status: '',
+         progress: 0,
+         result: null,
+         error: null,
+         ws: null,
+         isProcessing: false
+     }
+     ```
+   - WebSocket connection established: `ws://localhost:8000/ws/status/{filename}`
+
+2. **Backend Processing**
+   - File received at `/api/upload/`
+   - Added to `processing_files` set
+   - Status updates:
+     - "Uploading" (20%)
+     - "Extracting" (40%)
+     - "Processing" (60%)
+     - "Extracted" (80%)
+     - "Completed" (100%)
+     - "Failed" (0%)
+
+3. **Document Processing**
+   - Metadata extraction
+   - Document type detection
+   - Model selection:
+     - Gemini: Scanned/Large documents
+     - Ollama 3.2: Financial/Legal documents
+     - TinyLLaMA: Small documents
+     - Standard Table Extractor: Default
+
+4. **Error Handling**
+   - Status updates to "Failed"
+   - Error message display
+   - Resource cleanup
+   - WebSocket closure
+
+5. **Cancellation**
+   - WebSocket connection closure
+   - Cancel API call
+   - Processing removal
+   - Status update to "Stopped"
+
+6. **Result Display**
+   - Results formatting
+   - UI update with metadata
+   - Model information display
+   - React-markdown rendering
+
+7. **Cleanup**
+   - WebSocket connections closed
+   - Files removed from processing
+   - UI status updates
+   - Resource cleanup
 ```
 
 ## Process Steps
