@@ -4,8 +4,6 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 # Document Processing Pipeline
 
-## System Flow
-
 ```mermaid
 graph TD
     %% Frontend Flow
@@ -50,36 +48,7 @@ graph TD
     style K fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style L fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style M fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
-    style N fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style O fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
 ```
-
-## Key Features
-
-1. **Frontend Processing**
-   - React Dropzone for file upload
-   - File object initialization
-   - Real-time status tracking
-
-2. **Backend Processing**
-   - File saving and processing initiation
-   - WebSocket connection management
-   - Document type detection
-
-3. **Document Analysis**
-   - Tesseract OCR for scanned documents
-   - PyPDF2 for metadata and content extraction
-   - Intelligent model selection:
-     - Gemini: Large documents
-     - Ollama 3.2: Financial/Legal documents
-     - TinyLLaMA: Small documents
-     - Table Extractor: Default
-
-4. **Result Handling**
-   - Markdown processing
-   - HTML rendering
-   - Metadata display
-   - Error handling and cleanup
      
 ## Frontend Implementation – React.js
 
@@ -191,20 +160,10 @@ This routing ensures optimal accuracy, performance, and resource usage.
 7. **Selected model processes the content** and returns structured Markdown.
 8. **WebSocket pushes live status updates** to the frontend.
 9. **Frontend renders Markdown output** as readable HTML along with metadata.
+10. Terminate WebSocket Connection
 
 ---
 
-## Final Highlights
-
-- Smart model selection for cost-effective, accurate results  
-- Real-time feedback from backend to frontend  
-- Support for multiple document types (legal, financial, scanned, general)  
-- Modular backend with clean LLM abstraction and extendability  
-- Prioritized performance and cost-efficiency using open-source models
-
-
-
----
 ## Setup and Installation
 
 ### 1. Clone the Repository
