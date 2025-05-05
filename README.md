@@ -28,19 +28,13 @@ graph TD
     G -->|Default| L[Table Extractor]
     
     %% Content Processing
-    H --> M[PyPDF2 Extraction]
-    I --> M
-    J --> M
-    K --> M
-    L --> M
+    H --> M[Process Document & Generate Output]
     
     %% Results & Status
-    M --> N[Process Document & Generate Output]
+    M --> N[Render Results on Frontend]
+    N --> O[Close WebSocket Connection]
     
-    %% Cleanup
-    P --> Q[Render Results on Frontend]
-    Q --> R[Close WebSocket Connection]
-    
+
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style B fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
