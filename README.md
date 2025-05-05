@@ -6,7 +6,7 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 ## System Flow
 
-mermaid
+``mermaid
 graph TD
     %% Main Flow
     A[Upload PDF] --> B[WebSocket Setup]
