@@ -6,7 +6,7 @@ A full-stack application that allows users to upload PDF documents and automatic
 
 ## System Flow
 
-```mermaid
+mermaid
 graph TD
     %% Main Flow
     A[Upload PDF] --> B[WebSocket Setup]
@@ -25,15 +25,10 @@ graph TD
     G --> I
     H --> I
     
-    %% Success & Failure Paths
-    I -->|Success| J[Display Results]
-    I -->|Failure| K[Error Handling]
-    K --> L[Cleanup Resources]
-    L --> M[Close WebSocket]
-    
-    %% Status Updates
+    %% Error & Status
+    I --> J[Display]
     B -.->|Status Updates| J
-    B -.->|Status Updates| K
+    C -.->|If Error| K[Error Handling]
     
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
@@ -47,34 +42,6 @@ graph TD
     style I fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style J fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style K fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style L fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style M fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-```
-
-## Key Features
-
-1. **Document Processing**
-   - Real-time status updates via WebSocket
-   - Automatic document type detection
-   - Intelligent model selection
-
-2. **Model Selection**
-   - Gemini: Scanned/Large documents
-   - Ollama: Financial/Legal documents
-   - TinyLLaMA: Small documents
-   - Table Extractor: Standard documents
-
-3. **System Features**
-   - Real-time progress tracking
-   - Error handling and cleanup
-   - Resource management
-   - Clean result display
-
-4. **Error Handling**
-   - Automatic failure detection
-   - Resource cleanup
-   - WebSocket closure
-   - User notification
 ## Frontend Implementation – React.js
 
 The frontend of the application is built using **React.js**, providing an intuitive and responsive interface for:
