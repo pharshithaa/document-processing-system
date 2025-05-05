@@ -9,16 +9,16 @@ A full-stack application that allows users to upload PDF documents and automatic
 ```mermaid
 graph TD
     %% Frontend Flow
-    A[User Uploads PDF] --> B[React Dropzone]
-    B --> C[Initialize File Object]
+    A[Upload Document] --> B[Initiate WebSocket Connection]
+    B --> C[Store File & Initialize Processing]
     
     %% Backend Processing
-    C --> D[Save File & Start Processing]
-    D --> E[WebSocket Connection]
+    C --> D[Metadata and content are extracted]
+    D --> E[Classify Document Type]
     
     %% Document Analysis
-    E --> F[Document Analysis]
-    F --> G{Document Type}
+    E --> F[OCR for Scanned Documents]
+    F --> G{Route to Appropriate Model}
     
     %% Processing Paths
     G -->|Scanned| H[Tesseract OCR]
@@ -35,17 +35,11 @@ graph TD
     L --> M
     
     %% Results & Status
-    M --> N[Process Results]
-    N -->|Success| O[Display Results]
-    N -->|Failure| P[Error Handling]
-    
-    %% Status Updates
-    E -.->|Live Updates| O
-    E -.->|Live Updates| P
+    M --> N[Process Document & Generate Output]
     
     %% Cleanup
-    P --> Q[Cleanup Resources]
-    Q --> R[Close WebSocket]
+    P --> Q[Render Results on Frontend]
+    Q --> R[Close WebSocket Connection]
     
     %% Styling - Professional Blue Theme
     style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
