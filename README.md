@@ -2,97 +2,63 @@
 
 A full-stack application that allows users to upload PDF documents and automatically routes them through specialized LLMs based on their type and size. It supports scanned PDFs (OCR), legal and financial document parsing, and real-time status updates.
 
+# Document Processing Pipeline
+
+## System Flow
+
+```mermaid
 graph TD
-    %% Frontend Flow
-    subgraph Frontend
-        A1[User Uploads PDF] --> A2[Initialize File Object]
-        A2 --> A3[Setup WebSocket]
-        A3 --> A4[Upload Button Click]
-    end
-
-    %% Backend Processing
-    subgraph Backend
-        B1[Receive File] --> B2[Add to processing_files]
-        B2 --> B3[Update Status: Uploading]
-        B3 --> B4[Save to uploads/]
-        B4 --> B5[Extract Metadata]
-        B5 --> B6[Check Document Type]
-        
-        B6 --> C1{Document Type?}
-        C1 -->|Scanned| D1[Gemini Model]
-        C1 -->|Large >10 pages| D1
-        C1 -->|Financial| D2[Ollama 3.2]
-        C1 -->|Legal| D2
-        C1 -->|Small ≤3 pages| D3[TinyLLaMA]
-        C1 -->|Default| D4[Table Extractor]
-        
-        D1 --> E1[Process Results]
-        D2 --> E1
-        D3 --> E1
-        D4 --> E1
-    end
-
-    %% Status Management
-    subgraph Status
-        F1[Status Updates] --> F2[Progress Tracking]
-        F2 --> F3[WebSocket Broadcast]
-    end
-
-    %% Error Handling
-    subgraph ErrorHandling
-        G1[Error Detection] --> G2[Status: Failed]
-        G2 --> G3[Cleanup Resources]
-        G3 --> G4[Close WebSocket]
-    end
-
-    %% Cancellation Flow
-    subgraph Cancellation
-        H1[Cancel Button] --> H2[Close WebSocket]
-        H2 --> H3[Call Cancel API]
-        H3 --> H4[Remove from processing]
-    end
-
-    %% Result Display
-    subgraph Results
-        I1[Process Complete] --> I2[Format Results]
-        I2 --> I3[Display in UI]
-    end
-
-    %% Connections
-    A4 --> B1
-    B3 -.-> F1
-    B5 -.-> F1
-    E1 -.-> F1
-    G1 -.-> F1
-    H1 -.-> F1
-    F3 -.-> A3
-    E1 --> I1
-
-    %% Styling
-    style A1 fill:#ffffff,stroke:#333,stroke-width:2px
-    style B1 fill:#ffffff,stroke:#333,stroke-width:2px
-    style C1 fill:#ffffff,stroke:#333,stroke-width:2px
-    style F1 fill:#90ee90,stroke:#333,stroke-width:2px
-    style G1 fill:#ffcccc,stroke:#333,stroke-width:2px
-    style H1 fill:#ffffff,stroke:#333,stroke-width:2px
-    style I1 fill:#ffffff,stroke:#333,stroke-width:2px
-    style D1 fill:#90ee90,stroke:#333,stroke-width:2px
-    style D2 fill:#90ee90,stroke:#333,stroke-width:2px
-    style D3 fill:#90ee90,stroke:#333,stroke-width:2px
-    style D4 fill:#90ee90,stroke:#333,stroke-width:2px
-    style E1 fill:#90ee90,stroke:#333,stroke-width:2px
-    style F2 fill:#ffffff,stroke:#333,stroke-width:2px
-    style F3 fill:#ffffff,stroke:#333,stroke-width:2px
-    style G2 fill:#ffcccc,stroke:#333,stroke-width:2px
-    style G3 fill:#ffcccc,stroke:#333,stroke-width:2px
-    style G4 fill:#ffcccc,stroke:#333,stroke-width:2px
-    style H2 fill:#ffffff,stroke:#333,stroke-width:2px
-    style H3 fill:#ffffff,stroke:#333,stroke-width:2px
-    style H4 fill:#ffffff,stroke:#333,stroke-width:2px
-    style I2 fill:#ffffff,stroke:#333,stroke-width:2px
-    style I3 fill:#ffffff,stroke:#333,stroke-width:2px
-
+    %% Main Flow
+    A[Document Upload] --> B[Document Analysis]
+    B --> C{Document Type}
+    
+    %% Processing Paths
+    C -->|Scanned/Large| D[Gemini Model]
+    C -->|Financial/Legal| E[Ollama 3.2]
+    C -->|Small| F[TinyLLaMA]
+    C -->|Default| G[Table Extractor]
+    
+    %% Results
+    D --> H[Process Results]
+    E --> H
+    F --> H
+    G --> H
+    
+    %% Status & Display
+    H --> I[Display Results]
+    J[Status Updates] -.->|Real-time| I
+    
+    %% Styling - Professional Blue Theme
+    style A fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style B fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style C fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style D fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style E fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style F fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style G fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style H fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style I fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style J fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
 ```
+
+## Key Features
+
+1. **Document Processing**
+   - Automatic document type detection
+   - Intelligent model selection
+   - Real-time status updates
+
+2. **Model Selection**
+   - Gemini: Scanned/Large documents
+   - Ollama 3.2: Financial/Legal documents
+   - TinyLLaMA: Small documents
+   - Table Extractor: Standard documents
+
+3. **System Features**
+   - Real-time progress tracking
+   - Error handling
+   - Processing cancellation
+   - Clean result display
 
 ## Process Steps
 
