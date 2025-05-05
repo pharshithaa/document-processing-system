@@ -129,14 +129,15 @@ This routing ensures optimal accuracy, performance, and resource usage.
 
 ## How It Works (Flow Summary)
 
-1. User uploads file (via React Dropzone)  
-2. Backend receives document and begins processing  
-3. OCR check: If scanned, convert pages to images and apply OCR using Tesseract  
-4. Metadata and content extraction using PyPDF2  
-5. LLM routing via LangChain using defined rules  
-6. Chosen model processes content, generates structured output in Markdown  
-7. Real-time updates sent to frontend via WebSocket  
-8. Frontend displays output by rendering Markdown as readable HTML
+1. **User uploads a PDF** via React Dropzone.
+2. **Backend saves the file** and begins processing.
+3. **WebSocket is established** for real-time status updates.
+4. **Scanned PDFs are detected**, and OCR is applied using Tesseract.
+5. **Metadata and content are extracted** using PyPDF2.
+6. **Document is routed** to the appropriate LLM via LangChain.
+7. **Selected model processes the content** and returns structured Markdown.
+8. **WebSocket pushes live status updates** to the frontend.
+9. **Frontend renders Markdown output** as readable HTML along with metadata.
 
 ---
 

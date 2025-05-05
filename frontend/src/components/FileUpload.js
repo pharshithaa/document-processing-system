@@ -36,9 +36,7 @@ const FileUpload = () => {
         onDrop,
         multiple: true,
         accept: {
-            'application/pdf': ['.pdf'],
-            'application/msword': ['.doc'],
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+            'application/pdf': ['.pdf']
         },
         disabled: false
     });
@@ -179,7 +177,7 @@ const FileUpload = () => {
                                 </div>
                                 <div className="dropzone-title">Upload Document</div>
                                 <div className="dropzone-subtitle">Drag & drop your files here or click to browse</div>
-                                <div className="dropzone-formats">Supported formats: PDF, TXT, DOC, DOCX (Max: 10MB)</div>
+                                <div className="dropzone-formats">Supported format: PDF(Max: 10MB)</div>
                             </div>
                         </div>
                     </div>

@@ -115,6 +115,7 @@ def extract_from_large_document(pdf_path):
             5. If **no tables** are detected, still summarize the document and return key insights as bullet points.
             6.If any table is skipped, incomplete, or mentioned but not shown, it will be considered a failure. Show every single table in the best possible Markdown approximation.
             7. IF possible,show the page number in which the tables occur.
+            
             Be precise and do **not invent data**. Always reflect only what is present in the image.
 
         Text: {text}
