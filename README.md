@@ -29,6 +29,11 @@ graph TD
     
     %% Content Processing
     H --> M[Process Document & Generate Output]
+    H --> M
+    H --> M
+    H --> M
+    H --> M
+
     
     %% Results & Status
     M --> N[Render Results on Frontend]
@@ -51,9 +56,6 @@ graph TD
     style M fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
     style N fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style O fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
-    style P fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style Q fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
-    style R fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
 ```
 
 ## Key Features
