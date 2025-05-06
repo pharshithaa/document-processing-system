@@ -20,6 +20,13 @@ financial_extraction_prompt = """
      - For each table, explain what it likely represents (e.g., income statement, balance sheet).
      - Highlight key financial values such as revenue, profit/loss, assets, liabilities, etc.
      - Ensure the table is **complete**. If there is incomplete data, clearly mention which parts are missing.
+     - If **no tables** are detected, still summarize the document and return key insights as bullet points.
+     - Note that if any table is skipped, incomplete, or mentioned but not shown, it will be considered a failure. Show every single table in the best possible Markdown approximation.
+- **Final Document Summary**
+     - After all tables, provide a **clear, concise summary** of what the document reveals overall.
+     - Focus on insights such as: *profit/loss*, *trends*, *key performance figures*, or *overall financial health*.
+     - Example: "The document indicates a consistent monthly profit, with Q2 outperforming Q1 in revenue."
+     - If possible,show the page number in which the tables occur.
    
 - If **no tables are found**:
      - Still summarize any important financial information or figures mentioned in the text.

@@ -112,9 +112,14 @@ def extract_from_large_document(pdf_path):
                 ```
             3. Use bullet points for any key insights, lists, or highlights.
             4. Use `**bold**` for important values or keywords.
-            5. If **no tables** are detected, still summarize the document and return key insights as bullet points.
-            6.If any table is skipped, incomplete, or mentioned but not shown, it will be considered a failure. Show every single table in the best possible Markdown approximation.
-            7. IF possible,show the page number in which the tables occur.
+            6. If **no tables** are detected, still summarize the document and return key insights as bullet points.
+            7. Note that if any table is skipped, incomplete, or mentioned but not shown, it will be considered a failure. Show every single table in the best possible Markdown approximation.
+            8. **Final Document Summary**
+   - After all tables, provide a **clear, concise summary** of what the document reveals overall.
+   - Focus on insights such as: *profit/loss*, *trends*, *key performance figures*, or *overall financial health*.
+   - Example: "The document indicates a consistent monthly profit, with Q2 outperforming Q1 in revenue."
+            9. If possible,show the page number in which the tables occur.
+            
             
             Be precise and do **not invent data**. Always reflect only what is present in the image.
 
