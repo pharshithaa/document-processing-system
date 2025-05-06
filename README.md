@@ -64,7 +64,7 @@ The frontend of the application is built using **React.js**, providing an intuit
 | react-dropzone     | Enables smooth drag-and-drop or manual file uploads             |
 | react-query        | Manages API state, caching, and reactivity for smoother updates |
 | react-markdown     | Renders extracted markdown (e.g., tables/summaries) into HTML   |
-| Socket.IO          | Supports real-time communication between frontend and backend   |
+| WebSocket         | Supports real-time communication between frontend and backend   |
 
 ### Rationale for Tool Selection
 
