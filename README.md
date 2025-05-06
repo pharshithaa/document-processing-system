@@ -18,7 +18,7 @@ graph TD
     E -->|Large >10 pages| F[Gemini Model]
     E -->|Financial/Legal| G[Ollama 3.2]
     E -->|Small ≤3 pages| H[TinyLLaMA]
-    E -->|Default| I[General Analysis]
+    E -->|Default| I[Ollama 3.2]
     
     %% Content Processing
     F --> J[Process Document & Generate Output]
@@ -140,9 +140,9 @@ The system uses a rule-based LLM router for optimal model selection. This ensure
 | 3. Financial Document | Detected via metadata/text cues | Ollama 3.2               |
 | 4. Legal Document     | Detected via keywords/context   | Ollama 3.2               |
 | 5. Small Document     | 3 pages or fewer                | TinyLLaMA                |
-| 6. Fallback           | All else                        | Standard Table Extractor |
+| 6. Fallback           | All else                        | Ollama 3.2               |
 
-This routing ensures optimal accuracy, performance, and resource usage.
+Some models are reused across multiple conditions (e.g., Gemini for both scanned and large documents, Ollama 3.2 for legal, financial, and fallback cases). This is intentional — different prompts and processing logic are applied based on the document context to leverage the model's strengths effectively for each use case.
 
 ---
 
