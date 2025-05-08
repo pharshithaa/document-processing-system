@@ -70,7 +70,7 @@ The frontend of the application is built using **React.js**, providing an intuit
 | react-dropzone     | Enables smooth drag-and-drop or manual file uploads             |
 | react-query        | Manages API state, caching, and reactivity for smoother updates |
 | react-markdown     | Renders extracted markdown (e.g., tables/summaries) into HTML   |
-| Socket.IO          | Supports real-time communication between frontend and backend   |
+| WebSocket         | Supports real-time communication between frontend and backend   |
 
 ### Rationale for Tool Selection
 
@@ -79,7 +79,7 @@ The frontend of the application is built using **React.js**, providing an intuit
 - **react-dropzone**: Provides a user-friendly drag-and-drop interface  
 - **react-query**: Optimizes performance with smart caching and re-fetching  
 - **react-markdown**: Ensures clean rendering of LLM-generated markdown  
-- **Socket.IO**: Enables real-time progress tracking without page refreshes
+- **WebSocket**: Enables real-time progress tracking by maintaining a persistent connection between frontend and backend
 
 ### Core Features
 
@@ -105,7 +105,7 @@ The backend uses **FastAPI** for asynchronous API management and document routin
 | pdf2image       | Converts PDFs into images for OCR                                |
 | pytesseract     | Performs OCR on scanned PDF images                               |
 | LangChain       | Routes inputs to appropriate LLM based on rules                  |
-| Socket.IO       | Sends real-time document status to frontend                      |
+| WebSocket       | Sends real-time document status to frontend                      |
 | TinyLLaMA       | Efficient model for short documents                              |
 | Gemini          | Used for scanned and large documents (multimodal & long context) |
 | Ollama 3.2      | Specialized in parsing legal and financial documents             |
