@@ -88,7 +88,7 @@ The frontend of the application is built using **React.js**, providing an intuit
 - **Progress Visualization**: Color-coded badges and progress bar show live processing status  
 - **Markdown Output**: Extracted summaries/tables rendered cleanly using `react-markdown`  
 - **Error Handling**: Handles backend failures or unsupported formats with visible feedback
--**Custom Question Answering (LLM-Powered)** : Users can interactively ask **custom questions** about the content
+- **Custom Question Answering (LLM-Powered)** : Users can interactively ask **custom questions** about the content
 
 ---
 
@@ -165,7 +165,7 @@ Some models are reused across multiple conditions (e.g., Gemini for both scanned
 8. **WebSocket pushes live status updates** to the frontend.
 9. **Frontend renders Markdown output** as readable HTML along with metadata.
 10. **Terminate WebSocket Connection** after processing is complete.
-11.**User can ask custom questions** about the document's content
+11. **User can ask custom questions** about the document's content
         -Backend sends the user query along with document content to Gemini.
         -LLM processes and responds with a grounded answer.
         -Frontend displays the answer to the user.
