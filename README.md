@@ -166,9 +166,6 @@ Some models are reused across multiple conditions (e.g., Gemini for both scanned
 9. **Frontend renders Markdown output** as readable HTML along with metadata.
 10. **Terminate WebSocket Connection** after processing is complete.
 11. **User can ask custom questions** about the document's content
-        -Backend sends the user query along with document content to Gemini.
-        -LLM processes and responds with a grounded answer.
-        -Frontend displays the answer to the user.
 
 ---
 ##  UI Preview
