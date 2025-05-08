@@ -30,6 +30,9 @@ graph TD
     %% Results & Status
     J --> K[Render Results on Frontend]
     K --> L[WebSocket Termination]
+    L --> M[User Asks Custom Question]
+    M --> N[LLM Processes Question & Generates Answer]
+    N --> O[Display Answer on Frontend]
     
 
     %% Styling - Professional Blue Theme
@@ -45,6 +48,9 @@ graph TD
     style J fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style K fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
     style L fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style M fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
+    style N fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    style O fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#fff
 ```
      
 ## Frontend Implementation – React.js
@@ -82,6 +88,7 @@ The frontend of the application is built using **React.js**, providing an intuit
 - **Progress Visualization**: Color-coded badges and progress bar show live processing status  
 - **Markdown Output**: Extracted summaries/tables rendered cleanly using `react-markdown`  
 - **Error Handling**: Handles backend failures or unsupported formats with visible feedback
+-**Custom Question Answering (LLM-Powered)** : Users can interactively ask **custom questions** about the content
 
 ---
 
@@ -157,7 +164,11 @@ Some models are reused across multiple conditions (e.g., Gemini for both scanned
 7. **Selected model processes the content** and returns structured Markdown.
 8. **WebSocket pushes live status updates** to the frontend.
 9. **Frontend renders Markdown output** as readable HTML along with metadata.
-10. Terminate WebSocket Connection
+10. **Terminate WebSocket Connection** after processing is complete.
+11.**User can ask custom questions** about the document's content
+        -Backend sends the user query along with document content to Gemini.
+        -LLM processes and responds with a grounded answer.
+        -Frontend displays the answer to the user.
 
 ---
 ##  UI Preview

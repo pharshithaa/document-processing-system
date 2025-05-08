@@ -1,0 +1,44 @@
+.followup-qa {
+  margin-top: 24px;
+  padding: 16px 0;
+}
+
+.followup-qa h4 {
+  margin-bottom: 8px;
+  color: #2563eb;
+  font-size: 1.08em;
+}
+
+.followup-qa input[type="text"] {
+  width: 70%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  margin-right: 8px;
+  font-size: 1em;
+}
+
+.followup-qa button {
+  padding: 8px 18px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.followup-qa button:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+.followup-qa .answer {
+  margin-top: 12px;
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 8px;
+  color: #22223b;
+  font-size: 1.04em;
+}

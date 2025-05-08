@@ -5,6 +5,8 @@ import { useDropzone } from 'react-dropzone';
 import { useMutation } from '@tanstack/react-query';
 import StatusDashboard from './StatusDashboard';
 import './FileUpload.css';
+import './FollowupQA.css';
+
 
 const API_BASE_URL = 'http://localhost:8000';
 const UPLOAD_URL = `${API_BASE_URL}/api/upload/`;
@@ -13,6 +15,9 @@ const WS_BASE_URL = 'ws://localhost:8000';
 const FileUpload = () => {
     const [files, setFiles] = useState([]); // [{ file, name, size, status, progress, result, error, ws }]
     const [selectedIdx, setSelectedIdx] = useState(null);
+    const [question, setQuestion] = useState('');
+    const [answer, setAnswer] = useState('');
+    const [isAsking, setIsAsking] = useState(false);
 
     // Handle file selection (drag-and-drop or click)
     const onDrop = useCallback((acceptedFiles) => {
@@ -65,9 +70,27 @@ const FileUpload = () => {
 
     // Upload all files that are not yet started
     const handleUploadAll = () => {
+        console.log('Upload All clicked. Files:', files);
         files.forEach((f, idx) => {
-            if (!f.status || f.status === 'Stopped' || f.status === 'Failed') {
+            console.log(`Checking file ${idx}:`, f);
+            // Only upload files that haven't completed
+            if (f.status !== 'Completed') {
+                console.log(`Starting upload for file ${idx}:`, f.name);
+                // Close any existing WebSocket connection
+                if (f.ws) {
+                    f.ws.close();
+                }
+                // Reset the file status and start fresh
+                updateFile(idx, { 
+                    status: null, 
+                    progress: 0, 
+                    error: null, 
+                    isProcessing: false,
+                    result: null
+                });
                 uploadFile(f, idx);
+            } else {
+                console.log(`Skipping completed file ${idx}:`, f.name);
             }
         });
     };
@@ -155,6 +178,27 @@ const FileUpload = () => {
         }
         // eslint-disable-next-line
     }, [selectedIdx, files]);
+
+    const handleAskQuestion = async () => {
+        if (!question || selectedIdx === null || !files[selectedIdx]?.name) return;
+        setIsAsking(true);
+        setAnswer('');
+        try {
+            const res = await fetch('http://localhost:8000/api/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    document_id: files[selectedIdx].name,
+                    question: question
+                })
+            });
+            const data = await res.json();
+            setAnswer(data.answer || data.error || 'No answer received.');
+        } catch (err) {
+            setAnswer('Error contacting server.');
+        }
+        setIsAsking(false);
+    };
 
     return (
         <div className="file-upload-container">
@@ -249,6 +293,19 @@ const FileUpload = () => {
             {selectedIdx !== null && files[selectedIdx] && files[selectedIdx].result && (
                 <div className="result-section" ref={resultSectionRef}>
                     <h3>Result for: {files[selectedIdx].name}</h3>
+                    <div style={{ marginBottom: 12, color: '#64748b', fontSize: '1.01em' }}>
+                        You can ask custom questions about this document below!
+                    </div>
+                    <button
+                        className="upload-button"
+                        style={{ marginBottom: 12 }}
+                        onClick={() => {
+                            // Scroll to the question box
+                            document.querySelector('.followup-qa')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                    >
+                        Ask a Question
+                    </button>
                     <div className="metadata">
                         <strong>Metadata:</strong>
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -273,6 +330,25 @@ Pages: ${files[selectedIdx]?.result?.metadata?.pages || 'N/A'}
                             </ReactMarkdown>
                         ) : (
                             <pre>{JSON.stringify(files[selectedIdx].result.results, null, 2)}</pre>
+                        )}
+                    </div>
+                    <div className="followup-qa" style={{ marginTop: 24 }}>
+                        <h4>Ask a follow-up question about this document:</h4>
+                        <input
+                            type="text"
+                            value={question}
+                            onChange={e => setQuestion(e.target.value)}
+                            placeholder="Type your question..."
+                            style={{ width: '70%', marginRight: 8 }}
+                            disabled={isAsking}
+                        />
+                        <button onClick={handleAskQuestion} disabled={isAsking || !question}>
+                            {isAsking ? 'Asking...' : 'Ask'}
+                        </button>
+                        {answer && (
+                            <div className="answer" style={{ marginTop: 12, background: '#f3f4f6', padding: 12, borderRadius: 8 }}>
+                                <strong>Answer:</strong> {answer}
+                            </div>
                         )}
                     </div>
                     <button className="upload-button" onClick={() => setSelectedIdx(null)} style={{ marginTop: 12 }}>

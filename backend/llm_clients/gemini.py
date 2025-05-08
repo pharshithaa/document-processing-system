@@ -179,3 +179,38 @@ def extract_text_from_pdf(pdf_path):
         text += page.extract_text()
     return text
 
+def ask_gemini_question(document_text, user_question):
+    """
+    Given the document text and a user question, use Gemini to answer the question based on the document context.
+    """
+    API_KEY = os.getenv("GEMINI_API_KEY")
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+    prompt = f"""
+    You are an expert assistant. Use the following document to answer the user's question. Be concise and accurate.
+    Instructions:
+- Answer ONLY if the information is present in the document.
+- If the answer cannot be found in the document, respond with:
+  "The document does not contain information about that."
+- Do not assume, guess, or invent information.
+- Keep the answer clear and concise.
+
+    Document:
+    {document_text}
+
+    Question: {user_question}
+    """
+    payload = {
+        "contents": [{
+            "parts": [
+                {"text": prompt}
+            ]
+        }]
+    }
+    response = requests.post(url, json=payload)
+    if response.status_code == 200:
+        result = response.json()
+        text_content = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+        return text_content
+    else:
+        return f"API Error: {response.status_code}"
+

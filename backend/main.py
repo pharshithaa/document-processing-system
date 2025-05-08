@@ -1,9 +1,12 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from upload import router as upload_router
 from services.status_manager import get_status
 from services.websocket_manager import add_connection, remove_connection
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
+from llm_clients.gemini import ask_gemini_question
+import os
+from PyPDF2 import PdfReader
 
 app = FastAPI()
 
@@ -66,4 +69,28 @@ async def websocket_status(websocket: WebSocket, file_id: str):
         print(f"Error in WebSocket connection: {str(e)}")
     finally:
         remove_connection(file_id)
+
+@app.post("/api/ask")
+async def ask_question(request: Request):
+    data = await request.json()
+    document_id = data.get("document_id")
+    question = data.get("question")
+    if not document_id or not question:
+        return {"error": "document_id and question are required"}
+    # Assume file is stored in uploads/ with its filename as document_id
+    file_path = os.path.join("uploads", document_id)
+    if not os.path.exists(file_path):
+        return {"error": "Document not found"}
+    # Extract text from PDF
+    reader = PdfReader(file_path)
+    document_text = ""
+    for page in reader.pages:
+        page_text = page.extract_text()
+        if page_text:
+            document_text += page_text
+    if not document_text.strip():
+        return {"error": "No text found in document"}
+    # Use Gemini to answer the question
+    answer = ask_gemini_question(document_text, question)
+    return {"answer": answer}
 

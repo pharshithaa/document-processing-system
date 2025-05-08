@@ -82,48 +82,130 @@ html, body {
     background: #fff;
     border-radius: 18px;
     padding: 32px 28px 24px 28px;
-    margin: 32px auto 0 auto;
+    margin: 32px 0 0 0;
     box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
-    max-width: 700px;
     width: 100%;
-    transition: box-shadow 0.2s;
+    transition: all 0.3s ease;
     position: relative;
 }
 
+.result-section:hover {
+    box-shadow: 0 6px 32px rgba(44, 62, 80, 0.15);
+}
+
 .result-section h3 {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin-bottom: 18px;
+    margin-bottom: 24px;
     color: #34495e;
-    text-align: center;
+    text-align: left;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 12px;
 }
 
 .result-section .metadata,
 .result-section .processing-type,
 .result-section .model {
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
     color: #34495e;
     background: #f8f9fa;
-    border-radius: 8px;
-    padding: 10px 14px;
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.result-section .metadata:hover,
+.result-section .processing-type:hover,
+.result-section .model:hover {
+    background: #f0f2f5;
+    transform: translateY(-1px);
 }
 
 .result-section .results-content {
-    margin-top: 18px;
-    padding: 18px;
-    background: #f3f6fa;
-    border-radius: 10px;
+    margin-top: 24px;
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 12px;
     font-size: 1.05rem;
-    color: #222;
+    color: #2c3e50;
     overflow-x: auto;
-    box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.05);
+    border: 1px solid #e9ecef;
+    line-height: 1.6;
+}
+
+.result-section .results-content h1,
+.result-section .results-content h2,
+.result-section .results-content h3,
+.result-section .results-content h4 {
+    color: #2c3e50;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+.result-section .results-content p {
+    margin-bottom: 1.2em;
+}
+
+.result-section .results-content table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1.5em 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.05);
+}
+
+.result-section .results-content th,
+.result-section .results-content td {
+    border: 1px solid #e9ecef;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.result-section .results-content th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.result-section .results-content tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.result-section .results-content tr:hover {
+    background-color: #f0f2f5;
 }
 
 .result-section button.upload-button {
     display: block;
-    margin: 24px auto 0 auto;
-    min-width: 120px;
+    margin: 32px auto 0 auto;
+    min-width: 140px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.result-section button.upload-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.15);
+}
+
+/* Add a subtle gradient background to the results section */
+.result-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #466a8e 0%, #34495e 100%);
+    border-radius: 18px 18px 0 0;
 }
 
 .main-content {
@@ -314,33 +396,6 @@ html, body {
     margin-top: 10px;
     font-size: 0.85rem;
 }
-
-.results-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    font-size: 14px;
-  }
-  
-  .results-content th,
-  .results-content td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  .results-content th {
-    background-color: #f3f4f6;
-    font-weight: 600;
-    text-align: left;
-  }
-  
-  .results-content tr:nth-child(even) {
-    background-color: #f9fafb;
-  }
-  
-  .results-content tr:hover {
-    background-color: #f1f5f9;
-  }
 
 /* Responsive */
 @media (max-width: 900px) {
